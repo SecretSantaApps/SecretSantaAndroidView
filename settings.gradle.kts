@@ -13,4 +13,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "SecretSanta"
-include ':app'
+include(":app")
+include(":feature_auth")

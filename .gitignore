@@ -50,3 +50,5 @@ google-services.json
 *.hprof
 /app/src/androidTest/java/ru/kheynov/secretsanta/
 /app/src/test/java/ru/kheynov/secretsanta/
+/feature_auth/src/androidTest/java/ru/kheynov/feature_auth/
+/feature_auth/src/test/java/ru/kheynov/feature_auth/
