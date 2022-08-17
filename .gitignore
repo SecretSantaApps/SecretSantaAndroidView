@@ -18,7 +18,6 @@ local.properties
 build/
 
 # Local configuration file (sdk path, etc)
-local.properties
 
 # Log/OS Files
 *.log
@@ -33,7 +32,6 @@ captures/
 output.json
 
 # IntelliJ
-*.iml
 .idea/
 misc.xml
 deploymentTargetDropDown.xml
@@ -52,3 +50,5 @@ google-services.json
 /app/src/test/java/ru/kheynov/secretsanta/
 /feature_auth/src/androidTest/java/ru/kheynov/feature_auth/
 /feature_auth/src/test/java/ru/kheynov/feature_auth/
+/data/src/androidTest/java/ru/kheynov/data/
+/data/src/test/java/ru/kheynov/data/
