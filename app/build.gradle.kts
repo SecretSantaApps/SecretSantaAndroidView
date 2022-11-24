@@ -96,9 +96,12 @@ dependencies {
     // Picasso image loader
     implementation("com.squareup.picasso:picasso:2.8")
 
+    //SplashScreen
+    implementation("androidx.core:core-splashscreen:1.0.0")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:26.1.1"))
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.android.gms:play-services-auth:20.3.0")
+    implementation("com.google.android.gms:play-services-auth:20.4.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
 }

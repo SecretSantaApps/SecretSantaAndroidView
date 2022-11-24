@@ -1,5 +1,8 @@
-package ru.kheynov.secretsanta
+package ru.kheynov.secretsanta.presentation
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -10,6 +13,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
+import ru.kheynov.secretsanta.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var logoutButton: MaterialButton
     private lateinit var signinButton: MaterialButton
+    private lateinit var getTokenButton: MaterialButton
 
     private val signInLauncher = registerForActivityResult(
         FirebaseAuthUIActivityResultContract()
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         logoutButton = findViewById(R.id.logoutButton)
         signinButton = findViewById(R.id.signInButton)
+        getTokenButton = findViewById(R.id.getTokenButton)
 
         logoutButton.setOnClickListener {
             AuthUI.getInstance().signOut(this).addOnCompleteListener {
@@ -51,25 +57,35 @@ class MainActivity : AppCompatActivity() {
                 .build()
             signInLauncher.launch(signInIntent)
         }
-    }
 
-    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
-        if (result.resultCode == RESULT_OK) {
-            // Successfully signed in
-            Toast.makeText(applicationContext, "Authenticated!", Toast.LENGTH_LONG).show()
-
+        getTokenButton.setOnClickListener {
             val user = FirebaseAuth.getInstance().currentUser
-            user?.getIdToken(true)?.addOnCompleteListener { task ->
+            user?.getIdToken(false)?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val idToken: String? = task.result?.token
+
                     Log.i("TOKEN", idToken.toString())
+                    val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+                    val clip: ClipData = ClipData.newPlainText(null, "```${idToken.toString()}```")
+                    clipboard.setPrimaryClip(clip)
+                    Toast.makeText(this, "Copied to clipboard!", Toast.LENGTH_SHORT).show()
+
                     // Send token to your backend via HTTPS
                     // ...
                 } else {
                     // Handle error -> task.getException();
                 }
             }
+        }
+
+    }
+
+    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
+        val response = result.idpResponse
+        if (result.resultCode == RESULT_OK) {
+            // Successfully signed in
+            Toast.makeText(applicationContext, "Authenticated!", Toast.LENGTH_SHORT).show()
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
