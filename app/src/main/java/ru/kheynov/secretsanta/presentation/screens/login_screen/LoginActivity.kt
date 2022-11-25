@@ -29,7 +29,6 @@ class LoginActivity : AppCompatActivity() {
 
     private val providers = arrayListOf(
         AuthUI.IdpConfig.GoogleBuilder().build(),
-        AuthUI.IdpConfig.AnonymousBuilder().build(),
         AuthUI.IdpConfig.EmailBuilder().build(),
     )
 
