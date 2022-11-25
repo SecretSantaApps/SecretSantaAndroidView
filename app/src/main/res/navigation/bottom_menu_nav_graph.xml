@@ -8,16 +8,16 @@
     <fragment
         android:id="@+id/roomsListFragment"
         android:name="ru.kheynov.secretsanta.presentation.screens.rooms_list.RoomsListFragment"
-        android:label="fragment_rooms_list"
+        android:label="Rooms list"
         tools:layout="@layout/fragment_rooms_list" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="ru.kheynov.secretsanta.presentation.screens.profile.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/roomDetailsFragment"
-        android:name="ru.kheynov.secretsanta.presentation.screens.room_details.RoomDetailsFragment"
-        android:label="fragment_room_details"
-        tools:layout="@layout/fragment_room_details" />
+        android:id="@+id/createRoomFragment"
+        android:name="ru.kheynov.secretsanta.presentation.screens.room_details.CreateRoomFragment"
+        android:label="Create room"
+        tools:layout="@layout/fragment_create_room" />
 </navigation>

@@ -1,14 +1,20 @@
 package ru.kheynov.secretsanta.presentation
 
-import android.content.Intent
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.firebase.ui.auth.AuthUI
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.ActivityMainBinding
-import ru.kheynov.secretsanta.presentation.screens.login_screen.LoginActivity
+import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,24 +29,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = ActivityMainBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
-        binding.logoutFab.setOnClickListener {
-            AuthUI.getInstance().signOut(this).addOnCompleteListener {
-                navigateToLoginActivity()
-            }
-        }
+        val navController = this.findNavController(R.id.nav_host_fragment)
+
+        val navView = binding.bottomNavView
+        navView.setupWithNavController(navController)
     }
 
     override fun onResume() {
         super.onResume()
-        if (firebaseAuth.currentUser == null) navigateToLoginActivity()
+        if (firebaseAuth.currentUser == null) navigateToLoginScreen(this) //navigate to login
+    // screen if user not logged in
     }
 
-    private fun navigateToLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-    }
 
 }
