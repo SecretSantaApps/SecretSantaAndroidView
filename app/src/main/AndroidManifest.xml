@@ -4,6 +4,7 @@
     package="ru.kheynov.secretsanta">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".SantaApplication"
         android:allowBackup="true"
@@ -15,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SecretSanta"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.screens.login_screen.LoginActivity"
+            android:exported="false">
+        </activity>
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true">

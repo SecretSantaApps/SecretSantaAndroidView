@@ -1,5 +1,6 @@
 package ru.kheynov.secretsanta.di
 
+import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -30,6 +31,9 @@ object AppModule {
 
     @Provides
     fun provideFirebaseInstance() = FirebaseAuth.getInstance()
+
+    @Provides
+    fun provideAuthUIInstance() = AuthUI.getInstance()
 
     @Provides
     fun provideOkHttpClient(

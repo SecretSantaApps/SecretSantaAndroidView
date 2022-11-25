@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/roomsListFragment">
+
+    <fragment
+        android:id="@+id/roomsListFragment"
+        android:name="ru.kheynov.secretsanta.presentation.screens.rooms_list.RoomsListFragment"
+        android:label="fragment_rooms_list"
+        tools:layout="@layout/fragment_rooms_list" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ru.kheynov.secretsanta.presentation.screens.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/roomDetailsFragment"
+        android:name="ru.kheynov.secretsanta.presentation.screens.room_details.RoomDetailsFragment"
+        android:label="fragment_room_details"
+        tools:layout="@layout/fragment_room_details" />
+</navigation>
