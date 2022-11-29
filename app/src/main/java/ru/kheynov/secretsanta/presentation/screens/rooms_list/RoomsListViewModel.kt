@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import ru.kheynov.secretsanta.data.dto.RegisterUser
 import ru.kheynov.secretsanta.domain.use_cases.UseCases
 import ru.kheynov.secretsanta.utils.Resource
 import javax.inject.Inject
@@ -19,10 +18,9 @@ class RoomsListViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun loadData() {
-        val user = RegisterUser("abobus")
         viewModelScope.launch {
-            Log.i(TAG, "register user")
-            when (val res = useCases.registerUserUseCase(user)) {
+            //TODO: test data, change in production
+            when (val res = useCases.getSelfInfoUseCase()) {
                 is Resource.Failure -> {
                     Log.i(TAG, "Error body: ${(res.exception as HttpException).response()}")
                     when (res.exception.code()) {
@@ -30,7 +28,7 @@ class RoomsListViewModel @Inject constructor(
                     }
                     Log.e(TAG, "Something went wrong", res.exception)
                 }
-                is Resource.Success -> Log.i(TAG, "Everything was ok")
+                is Resource.Success -> Log.i(TAG, "Everything was ok ${res.result}")
             }
         }
     }

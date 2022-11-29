@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (firebaseAuth.currentUser == null || !keyValueStorage.isAuthorized)
-            navigateToLoginScreen(this)
-        //navigate to login screen if user not logged in
+            navigateToLoginScreen(this) //navigate to login screen if user not logged in
     }
 
 }

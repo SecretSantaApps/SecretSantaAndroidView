@@ -4,4 +4,7 @@
     <string name="rooms_menu_title">Rooms</string>
     <string name="create_menu_title">New room</string>
     <string name="profile_menu_title">Profile</string>
+    <string name="user_registration_title">Регистрация пользователя</string>
+    <string name="username_input_hint">Введите имя (никнейм)</string>
+    <string name="register_button_title">Зарегистрироваться</string>
 </resources>

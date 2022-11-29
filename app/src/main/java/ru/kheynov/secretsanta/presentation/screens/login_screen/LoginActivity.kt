@@ -3,14 +3,18 @@ package ru.kheynov.secretsanta.presentation.screens.login_screen
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.data.KeyValueStorage
 import ru.kheynov.secretsanta.databinding.ActivityLoginBinding
@@ -36,6 +40,13 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
+    private val state = MutableStateFlow<State>(State.Idle)
+
+    private sealed interface State {
+        object Idle : State
+        object Loading : State
+    }
+
     private val signInLauncher =
         registerForActivityResult(FirebaseAuthUIActivityResultContract()) { res ->
             this.onSignInResult(res)
@@ -58,26 +69,41 @@ class LoginActivity : AppCompatActivity() {
                 .build()
             signInLauncher.launch(signInIntent)
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                state.collect { state ->
+                    binding.apply {
+                        loginProgressBar.visibility = if (state == State.Loading) View.VISIBLE
+                        else View.GONE
+                        signInButton.visibility = if (state == State.Idle) View.VISIBLE
+                        else View.GONE
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (firebaseAuth.currentUser != null) {
             lifecycleScope.launch {
+                state.value = State.Loading
                 when (val res = useCases.checkUserRegistered()) {
                     is Resource.Failure -> {
                         keyValueStorage.isAuthorized = false
+                        state.value = State.Idle
                         Log.e(TAG, "Something went wrong", res.exception)
                         Toast.makeText(this@LoginActivity, "Error", Toast.LENGTH_SHORT).show()
                     }
                     is Resource.Success -> {
-                        if (res.result) {
-                            keyValueStorage.isAuthorized = true
+                        keyValueStorage.isAuthorized = res.result
+                        state.value = State.Idle
+                        if (res.result)
                             navigateToMainActivity()
-                        } else {
-                            keyValueStorage.isAuthorized = false
+                        else
                             navigateToRegisterActivity()
-                        }
+
                     }
                 }
             }
@@ -96,7 +122,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-//        val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
             Toast.makeText(applicationContext, "Authenticated!", Toast.LENGTH_SHORT).show()

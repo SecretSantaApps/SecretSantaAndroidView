@@ -7,10 +7,45 @@
     tools:context=".presentation.screens.register_screen.RegisterActivity">
 
     <TextView
+        android:id="@+id/register_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RegisterActivity"
-        android:textSize="30sp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/user_registration_title"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/register_username_input"
+        android:layout_width="match_parent"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="32dp"
+        android:hint="@string/username_input_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_title_text" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/register_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/register_button_title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/register_progress_bar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

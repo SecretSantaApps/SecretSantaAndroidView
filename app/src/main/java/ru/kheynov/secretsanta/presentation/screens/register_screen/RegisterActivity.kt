@@ -1,12 +1,64 @@
 package ru.kheynov.secretsanta.presentation.screens.register_screen
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import ru.kheynov.secretsanta.R
+import android.view.View
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.data.dto.RegisterUser
+import ru.kheynov.secretsanta.databinding.ActivityRegisterBinding
 
+private const val TAG = "RegisterActivity"
+
+@AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityRegisterBinding
+
+    private val viewModel by viewModels<RegisterActivityViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.registerButton.setOnClickListener {
+            viewModel.registerUser(RegisterUser(binding.registerUsernameInput.text.toString()))
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    binding.apply {
+                        registerProgressBar.visibility =
+                            if (state == RegisterActivityViewModel.State.Loading) View.VISIBLE
+                            else View.GONE
+                        registerUsernameInput.visibility =
+                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            else View.GONE
+                        registerButton.visibility =
+                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            else View.GONE
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.actions.collect(::handleActions)
+        }
+    }
+
+    private fun handleActions(action: RegisterActivityViewModel.Action) {
+        when (action) {
+            RegisterActivityViewModel.Action.RouteToMain -> finish()
+            is RegisterActivityViewModel.Action.ShowError -> Toast.makeText(this,
+                "Error: ${action.error}",
+                Toast.LENGTH_SHORT).show()
+        }
     }
 }
