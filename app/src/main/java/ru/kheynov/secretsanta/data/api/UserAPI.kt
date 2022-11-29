@@ -17,12 +17,12 @@ interface UserAPI {
     @DELETE("user")
     suspend fun deleteUser()
 
-    @PATCH("/user")
+    @PATCH("user")
     suspend fun updateUser(@Body body: UpdateUser)
 
-    @GET("/user")
+    @GET("user")
     suspend fun getSelfInfo(): UserInfo
 
-    @HEAD("/user")
+    @GET("user")
     suspend fun checkUserRegistered()
 }

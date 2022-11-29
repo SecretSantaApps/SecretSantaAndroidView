@@ -8,6 +8,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kheynov.secretsanta.R
+import ru.kheynov.secretsanta.data.KeyValueStorage
 import ru.kheynov.secretsanta.databinding.ActivityMainBinding
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 import javax.inject.Inject
@@ -17,6 +18,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     private lateinit var binding: ActivityMainBinding
 
@@ -35,9 +39,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (firebaseAuth.currentUser == null) navigateToLoginScreen(this) //navigate to login
-    // screen if user not logged in
+        if (firebaseAuth.currentUser == null || !keyValueStorage.isAuthorized)
+            navigateToLoginScreen(this)
+        //navigate to login screen if user not logged in
     }
-
 
 }

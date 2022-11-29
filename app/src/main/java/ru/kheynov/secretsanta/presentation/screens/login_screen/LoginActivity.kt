@@ -2,16 +2,25 @@ package ru.kheynov.secretsanta.presentation.screens.login_screen
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.data.KeyValueStorage
 import ru.kheynov.secretsanta.databinding.ActivityLoginBinding
+import ru.kheynov.secretsanta.domain.use_cases.UseCases
 import ru.kheynov.secretsanta.presentation.MainActivity
+import ru.kheynov.secretsanta.presentation.screens.register_screen.RegisterActivity
+import ru.kheynov.secretsanta.utils.Resource
 import javax.inject.Inject
+
+private const val TAG = "LoginActivity"
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -19,13 +28,18 @@ class LoginActivity : AppCompatActivity() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
+
+    @Inject
+    lateinit var useCases: UseCases
+
     private lateinit var binding: ActivityLoginBinding
 
-    private val signInLauncher = registerForActivityResult(
-        FirebaseAuthUIActivityResultContract()
-    ) { res ->
-        this.onSignInResult(res)
-    }
+    private val signInLauncher =
+        registerForActivityResult(FirebaseAuthUIActivityResultContract()) { res ->
+            this.onSignInResult(res)
+        }
 
     private val providers = arrayListOf(
         AuthUI.IdpConfig.GoogleBuilder().build(),
@@ -48,7 +62,31 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (firebaseAuth.currentUser != null) navigateToMainActivity()
+        if (firebaseAuth.currentUser != null) {
+            lifecycleScope.launch {
+                when (val res = useCases.checkUserRegistered()) {
+                    is Resource.Failure -> {
+                        keyValueStorage.isAuthorized = false
+                        Log.e(TAG, "Something went wrong", res.exception)
+                        Toast.makeText(this@LoginActivity, "Error", Toast.LENGTH_SHORT).show()
+                    }
+                    is Resource.Success -> {
+                        if (res.result) {
+                            keyValueStorage.isAuthorized = true
+                            navigateToMainActivity()
+                        } else {
+                            keyValueStorage.isAuthorized = false
+                            navigateToRegisterActivity()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun navigateToRegisterActivity() {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 
     private fun navigateToMainActivity() {

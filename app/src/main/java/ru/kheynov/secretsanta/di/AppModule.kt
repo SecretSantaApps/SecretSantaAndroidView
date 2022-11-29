@@ -14,11 +14,12 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import ru.kheynov.secretsanta.data.api.UserAPI
 import ru.kheynov.secretsanta.domain.repositories.UsersRepository
+import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.users.CheckUserRegistered
 import ru.kheynov.secretsanta.domain.use_cases.users.DeleteUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.GetSelfInfoUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.RegisterUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.UpdateUserUseCase
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
 import ru.kheynov.secretsanta.utils.AuthInterceptor
 import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Singleton
@@ -28,8 +29,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Provides
-    fun provideBaseURL() = "https://santa.s.kheynov.ru/api/v1/"
+    private const val BASE_URL = "https://santa.s.kheynov.ru/api/v1/"
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -61,11 +61,12 @@ object AppModule {
         deleteUserUseCase = DeleteUserUseCase(tokenRepository, usersRepository),
         updateUserUseCase = UpdateUserUseCase(tokenRepository, usersRepository),
         getSelfInfoUseCase = GetSelfInfoUseCase(tokenRepository, usersRepository),
+        checkUserRegistered = CheckUserRegistered(tokenRepository, usersRepository)
     )
 
     @Provides
     @Singleton
-    fun provideRetrofit(BASE_URL: String, httpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(httpClient: OkHttpClient): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder().addConverterFactory(json.asConverterFactory(contentType))
             .baseUrl(BASE_URL).client(httpClient).build()
