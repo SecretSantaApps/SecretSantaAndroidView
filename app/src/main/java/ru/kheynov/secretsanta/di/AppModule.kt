@@ -17,6 +17,7 @@ import ru.kheynov.secretsanta.domain.repositories.UsersRepository
 import ru.kheynov.secretsanta.domain.use_cases.UseCases
 import ru.kheynov.secretsanta.domain.use_cases.users.CheckUserRegistered
 import ru.kheynov.secretsanta.domain.use_cases.users.DeleteUserUseCase
+import ru.kheynov.secretsanta.domain.use_cases.users.GetFirebaseUserNameUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.GetSelfInfoUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.RegisterUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.UpdateUserUseCase
@@ -61,7 +62,8 @@ object AppModule {
         deleteUserUseCase = DeleteUserUseCase(tokenRepository, usersRepository),
         updateUserUseCase = UpdateUserUseCase(tokenRepository, usersRepository),
         getSelfInfoUseCase = GetSelfInfoUseCase(tokenRepository, usersRepository),
-        checkUserRegistered = CheckUserRegistered(tokenRepository, usersRepository)
+        checkUserRegistered = CheckUserRegistered(tokenRepository, usersRepository),
+        getFirebaseUserNameUseCase = GetFirebaseUserNameUseCase(tokenRepository, usersRepository),
     )
 
     @Provides

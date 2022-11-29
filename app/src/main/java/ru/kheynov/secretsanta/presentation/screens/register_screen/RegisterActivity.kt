@@ -12,6 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.data.dto.RegisterUser
 import ru.kheynov.secretsanta.databinding.ActivityRegisterBinding
+import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 
 private const val TAG = "RegisterActivity"
 
@@ -39,10 +40,18 @@ class RegisterActivity : AppCompatActivity() {
                             if (state == RegisterActivityViewModel.State.Loading) View.VISIBLE
                             else View.GONE
                         registerUsernameInput.visibility =
-                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            if (state is RegisterActivityViewModel.State.Idle) View.VISIBLE
                             else View.GONE
+
+                        if (state is RegisterActivityViewModel.State.Idle) registerUsernameInput
+                            .setText(state.username)
+
                         registerButton.visibility =
-                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            if (state is RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            else View.GONE
+
+                        registerTitleText.visibility =
+                            if (state is RegisterActivityViewModel.State.Idle) View.VISIBLE
                             else View.GONE
                     }
                 }
@@ -55,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun handleActions(action: RegisterActivityViewModel.Action) {
         when (action) {
-            RegisterActivityViewModel.Action.RouteToMain -> finish()
+            RegisterActivityViewModel.Action.RouteToMain -> navigateToLoginScreen(this)
             is RegisterActivityViewModel.Action.ShowError -> Toast.makeText(this,
                 "Error: ${action.error}",
                 Toast.LENGTH_SHORT).show()

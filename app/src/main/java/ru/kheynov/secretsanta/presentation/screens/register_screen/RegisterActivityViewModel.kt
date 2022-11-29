@@ -22,12 +22,16 @@ class RegisterActivityViewModel @Inject constructor(
     private val useCases: UseCases,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State>(State.Idle)
+    private val _state = MutableStateFlow<State>(State.Loading)
     val state: StateFlow<State> = _state
 
     sealed interface State {
-        object Idle : State
+        data class Idle(val username: String) : State
         object Loading : State
+    }
+
+    init {
+        getUsername()
     }
 
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
@@ -48,6 +52,22 @@ class RegisterActivityViewModel @Inject constructor(
                 }
                 is Resource.Success -> {
                     _actions.send(Action.RouteToMain)
+                }
+            }
+        }
+    }
+
+    private fun getUsername() {
+        viewModelScope.launch {
+            _state.value = State.Loading
+            when (val res = useCases.getFirebaseUserNameUseCase()) {
+                is Resource.Failure -> {
+                    _actions.send(Action.ShowError(res.exception.message.toString()))
+                    Log.e(TAG, "Something went wrong", res.exception)
+                    _state.value = State.Idle("")
+                }
+                is Resource.Success -> {
+                    _state.value = State.Idle(res.result)
                 }
             }
         }
