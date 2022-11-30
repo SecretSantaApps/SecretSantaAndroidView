@@ -5,12 +5,12 @@ import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Inject
 
-class GetFirebaseUserNameUseCase @Inject constructor(
+class CheckUserRegisteredUseCase @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val usersRepository: UsersRepository,
 ) {
-    suspend operator fun invoke(): Resource<String> {
+    suspend operator fun invoke(): Resource<Boolean> {
         tokenRepository.fetchToken()
-        return usersRepository.getFirebaseName()
+        return usersRepository.checkUserRegistered()
     }
 }

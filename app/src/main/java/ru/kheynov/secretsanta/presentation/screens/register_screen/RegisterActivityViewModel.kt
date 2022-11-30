@@ -3,6 +3,7 @@ package ru.kheynov.secretsanta.presentation.screens.register_screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -20,21 +21,21 @@ private const val TAG = "RegisterActivityViewModel"
 @HiltViewModel
 class RegisterActivityViewModel @Inject constructor(
     private val useCases: UseCases,
+    firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _state = MutableStateFlow<State>(State.Idle)
     val state: StateFlow<State> = _state
 
     sealed interface State {
-        data class Idle(val username: String) : State
+        object Idle : State
         object Loading : State
     }
 
-    init {
-        getUsername()
-    }
+    val username = firebaseAuth.currentUser?.displayName ?: firebaseAuth.currentUser?.email
 
-    private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
+    private
+    val _actions: Channel<Action> = Channel(Channel.BUFFERED)
     val actions: Flow<Action> = _actions.receiveAsFlow()
 
     sealed interface Action {
@@ -56,22 +57,4 @@ class RegisterActivityViewModel @Inject constructor(
             }
         }
     }
-
-    private fun getUsername() {
-        viewModelScope.launch {
-            _state.value = State.Loading
-            when (val res = useCases.getFirebaseUserNameUseCase()) {
-                is Resource.Failure -> {
-                    _actions.send(Action.ShowError(res.exception.message.toString()))
-                    Log.e(TAG, "Something went wrong", res.exception)
-                    _state.value = State.Idle("")
-                }
-                is Resource.Success -> {
-                    _state.value = State.Idle(res.result)
-                }
-            }
-        }
-    }
-
-
 }

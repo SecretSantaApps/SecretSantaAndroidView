@@ -1,19 +1,20 @@
 package ru.kheynov.secretsanta.domain.use_cases.users
 
-import ru.kheynov.secretsanta.data.dto.RegisterUser
 import ru.kheynov.secretsanta.domain.repositories.UsersRepository
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
+import ru.kheynov.secretsanta.utils.UserNotExistsException
 import javax.inject.Inject
 
-class RegisterUserUseCase @Inject constructor(
+class DeleteUserUseCase @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val usersRepository: UsersRepository,
 ) {
-    suspend operator fun invoke(
-        user: RegisterUser,
-    ): Resource<Unit> {
+    suspend operator fun invoke(): Resource<Unit> {
         tokenRepository.fetchToken()
-        return usersRepository.registerUser(user)
+        val userCheck = usersRepository.checkUserRegistered()
+        if (userCheck is Resource.Success && !userCheck.result)
+            return Resource.Failure(UserNotExistsException())
+        return usersRepository.deleteUser()
     }
 }

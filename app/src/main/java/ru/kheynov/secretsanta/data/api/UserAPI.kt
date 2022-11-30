@@ -8,7 +8,6 @@ import retrofit2.http.POST
 import ru.kheynov.secretsanta.data.dto.RegisterUser
 import ru.kheynov.secretsanta.data.dto.UpdateUser
 import ru.kheynov.secretsanta.data.dto.UserInfo
-import ru.kheynov.secretsanta.data.dto.UserName
 
 interface UserAPI {
     @POST("user")
@@ -25,7 +24,4 @@ interface UserAPI {
 
     @GET("user")
     suspend fun checkUserRegistered()
-
-    @GET("user/name")
-    suspend fun getFirebaseName(): UserName
 }

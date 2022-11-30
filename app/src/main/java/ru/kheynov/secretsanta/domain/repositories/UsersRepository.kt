@@ -60,13 +60,4 @@ class UsersRepository @Inject constructor(private val userAPI: UserAPI) {
             Resource.Failure(e) // another error
         }
     }
-
-    suspend fun getFirebaseName(): Resource<String> {
-        return try {
-            val res = userAPI.getFirebaseName()
-            Resource.Success(res.username) // user registered
-        } catch (e: Exception) {
-            Resource.Failure(e) // another error
-        }
-    }
 }

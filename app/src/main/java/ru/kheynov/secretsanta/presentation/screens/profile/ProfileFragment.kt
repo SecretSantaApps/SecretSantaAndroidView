@@ -1,20 +1,13 @@
 package ru.kheynov.secretsanta.presentation.screens.profile
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ru.kheynov.secretsanta.databinding.FragmentProfileBinding
-import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -34,7 +27,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.signOutButton.setOnClickListener {
+        /*binding.signOutButton.setOnClickListener {
             activity?.applicationContext?.let { context ->
                 AuthUI.getInstance().signOut(context).addOnCompleteListener {
                     navigateToLoginScreen(context)
@@ -59,7 +52,7 @@ class ProfileFragment : Fragment() {
                     // Handle error -> task.getException();
                 }
             }
-        }
+        }*/
     }
 
 }

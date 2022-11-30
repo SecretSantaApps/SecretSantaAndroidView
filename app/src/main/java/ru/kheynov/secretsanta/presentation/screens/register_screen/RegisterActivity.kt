@@ -14,8 +14,6 @@ import ru.kheynov.secretsanta.data.dto.RegisterUser
 import ru.kheynov.secretsanta.databinding.ActivityRegisterBinding
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 
-private const val TAG = "RegisterActivity"
-
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
 
@@ -44,14 +42,14 @@ class RegisterActivity : AppCompatActivity() {
                             else View.GONE
 
                         if (state is RegisterActivityViewModel.State.Idle) registerUsernameInput
-                            .setText(state.username)
+                            .setText(viewModel.username)
 
                         registerButton.visibility =
-                            if (state is RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
                             else View.GONE
 
                         registerTitleText.visibility =
-                            if (state is RegisterActivityViewModel.State.Idle) View.VISIBLE
+                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
                             else View.GONE
                     }
                 }

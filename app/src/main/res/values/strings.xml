@@ -7,4 +7,10 @@
     <string name="user_registration_title">Регистрация пользователя</string>
     <string name="username_input_hint">Введите имя (никнейм)</string>
     <string name="register_button_title">Зарегистрироваться</string>
+    <string name="profile_screen_title">Профиль</string>
+    <string name="log_out_button_content_description">log out button</string>
+    <string name="avatar_content_description">avatar</string>
+    <string name="edit_button_content_description">edit button</string>
+    <string name="also_you_can">Также вы можете</string>
+    <string name="delete_your_account"> удалить свой профиль</string>
 </resources>

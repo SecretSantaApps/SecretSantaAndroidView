@@ -10,9 +10,6 @@ data class RegisterUser(val username: String?)
 data class UpdateUser(val username: String)
 
 @Serializable
-data class UserName(val username: String)
-
-@Serializable
 data class UserInfo(
     @SerialName("user_id") val userId: String,
     @SerialName("username") val username: String,
