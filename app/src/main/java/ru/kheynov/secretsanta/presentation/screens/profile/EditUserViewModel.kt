@@ -10,23 +10,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.data.dto.UpdateUser
 import ru.kheynov.secretsanta.domain.use_cases.UseCases
 import ru.kheynov.secretsanta.utils.Resource
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileFragmentViewModel @Inject constructor(
+class EditUserViewModel @Inject constructor(
+    firebaseAuth: FirebaseAuth,
     private val useCases: UseCases,
 ) : ViewModel() {
+
     sealed interface State {
         object Loading : State
-        data class Loaded(val name: String) : State
+        data class Loaded(val username: String) : State
     }
 
     sealed interface Action {
-        object NavigateToLoginScreen : Action
+        object NavigateBack : Action
         object ShowError : Action
-        object NavigateToEditUser : Action
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -35,39 +37,25 @@ class ProfileFragmentViewModel @Inject constructor(
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
     val actions: Flow<Action> = _actions.receiveAsFlow()
 
-    private lateinit var username: String
-
     init {
-        updateUsername()
+        viewModelScope.launch {
+            when (val res = useCases.getSelfInfoUseCase()) {
+                is Resource.Failure -> {
+                    _actions.send(Action.ShowError)
+                }
+                is Resource.Success -> {
+                    _state.value = State.Loaded(res.result.username)
+                }
+            }
+        }
     }
 
-    fun updateUsername() {
+    fun saveUsername(name: String) {
         viewModelScope.launch {
             _state.value = State.Loading
-            when (val res = useCases.getSelfInfoUseCase()) {
-                is Resource.Failure -> _actions.send(Action.ShowError)
-                is Resource.Success -> username = res.result.username
-            }
-            _state.value = State.Loaded(username)
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            _actions.send(Action.NavigateToLoginScreen)
-        }
-    }
-
-    fun deleteAccount() {
-        viewModelScope.launch {
-            useCases.deleteUserUseCase()
-            _actions.send(Action.NavigateToLoginScreen)
-        }
-    }
-
-    fun editUsername() {
-        viewModelScope.launch {
-            _actions.send(Action.NavigateToEditUser)
+            //TODO: add name validation
+            useCases.updateUserUseCase(UpdateUser(name))
+            _actions.send(Action.NavigateBack)
         }
     }
 }

@@ -1,5 +1,6 @@
 package ru.kheynov.secretsanta.presentation.screens.profile
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,9 +44,9 @@ class ProfileFragment : Fragment() {
             }
         }
         binding.apply {
-            logoutButton.setOnClickListener { viewModel.logout() }
+            logoutButton.setOnClickListener { showLogoutAlertDialog(view) }
             nicknameText.setOnClickListener { viewModel.editUsername() }
-            deleteProfileButton.setOnClickListener { viewModel.deleteAccount() }
+            deleteProfileButton.setOnClickListener { showDeleteAccountDialog(view) }
         }
     }
 
@@ -54,6 +55,7 @@ class ProfileFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.actions.collect(::handleAction)
         }
+        viewModel.updateUsername()
     }
 
     private fun updateUI(state: State) {
@@ -88,6 +90,44 @@ class ProfileFragment : Fragment() {
             Action.NavigateToEditUser -> {
                 findNavController().navigate(R.id.editUser)
             }
+        }
+    }
+
+    private fun showLogoutAlertDialog(view: View) {
+        val builder = AlertDialog.Builder(view.context)
+        builder.apply {
+            setTitle(getString(R.string.logout_dialog_title))
+            setMessage(getString(R.string.logout_dialog_confirmation))
+            setPositiveButton(
+                getString(R.string.dialog_leave_button)) { dialog, _ ->
+                dialog.dismiss()
+                viewModel.logout()
+            }
+
+            setNegativeButton(
+                getString(R.string.cancel_button)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            show()
+        }
+    }
+
+    private fun showDeleteAccountDialog(view: View) {
+        val builder = AlertDialog.Builder(view.context)
+        builder.apply {
+            setTitle(getString(R.string.delete_profile_dialog_title))
+            setMessage(getString(R.string.delete_profile_dialog_confirmation))
+            setPositiveButton(
+                "Удалить") { dialog, _ ->
+                dialog.dismiss()
+                viewModel.deleteAccount()
+            }
+
+            setNegativeButton(
+                getString(R.string.cancel_button)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            show()
         }
     }
 }

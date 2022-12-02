@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,12 +45,18 @@ class RoomsListViewModel @Inject constructor(
             _state.value = State.Loading
             when (val res = useCases.getSelfInfoUseCase()) {
                 is Resource.Failure -> {
-                    if (res.exception is UserNotExistsException) {
-                        Log.e(TAG, "User not registered")
-                        _actions.send(Action.RouteToLogin)
-                    } else {
-                        Log.e(TAG, "Something went wrong", res.exception)
-                        _actions.send(Action.ShowError(res.exception.message.toString()))
+                    when (res.exception) {
+                        is UserNotExistsException -> {
+                            Log.e(TAG, "User not registered")
+                            _actions.send(Action.RouteToLogin)
+                        }
+                        is CancellationException -> {
+                            Log.i(TAG, "Job cancelled")
+                        }
+                        else -> {
+                            Log.e(TAG, "Something went wrong", res.exception)
+                            _actions.send(Action.ShowError(res.exception.message.toString()))
+                        }
                     }
                 }
                 is Resource.Success -> {

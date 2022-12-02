@@ -20,4 +20,10 @@
         android:name="ru.kheynov.secretsanta.presentation.screens.room_details.CreateRoomFragment"
         android:label="Create room"
         tools:layout="@layout/fragment_create_room" />
+
+    <fragment
+        android:id="@+id/editUser"
+        android:name="ru.kheynov.secretsanta.presentation.screens.profile.EditUserFragment"
+        android:label="Edit user"
+        tools:layout="@layout/fragment_edit_user" />
 </navigation>
