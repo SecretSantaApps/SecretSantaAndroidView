@@ -58,6 +58,8 @@ dependencies {
 
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.5.1")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
     // Hilt
     kapt("com.google.dagger:hilt-android-compiler:2.42")

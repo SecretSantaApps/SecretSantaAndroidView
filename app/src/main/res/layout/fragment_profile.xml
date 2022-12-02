@@ -59,7 +59,18 @@
         app:layout_constraintTop_toBottomOf="@+id/avatar_image"
         tools:text="kheynov_v" />
 
+    <ProgressBar
+        android:id="@+id/profile_progress_bar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
+        android:id="@+id/delete_profile_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"

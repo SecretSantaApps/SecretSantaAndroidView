@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.databinding.FragmentRoomsListBinding
+import ru.kheynov.secretsanta.presentation.screens.rooms_list.RoomsListViewModel.State
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 
 @AndroidEntryPoint
@@ -38,13 +39,13 @@ class RoomsListFragment : Fragment() {
                 viewModel.state.collect { state ->
                     binding.apply {
                         roomsListProgressBar.visibility =
-                            if (state == RoomsListViewModel.State.Loading) View.VISIBLE
+                            if (state == State.Loading) View.VISIBLE
                             else View.GONE
                         roomsListText.visibility =
-                            if (state is RoomsListViewModel.State.Loaded) View.VISIBLE
+                            if (state is State.Loaded) View.VISIBLE
                             else View.GONE
                         roomsListText.text =
-                            if (state is RoomsListViewModel.State.Loaded) "Username: ${state.username}"
+                            if (state is State.Loaded) "Username: ${state.username}"
                             else ""
                     }
                 }

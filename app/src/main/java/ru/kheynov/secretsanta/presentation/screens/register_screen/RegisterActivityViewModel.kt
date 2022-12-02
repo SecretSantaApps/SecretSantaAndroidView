@@ -34,8 +34,7 @@ class RegisterActivityViewModel @Inject constructor(
 
     val username = firebaseAuth.currentUser?.displayName ?: firebaseAuth.currentUser?.email
 
-    private
-    val _actions: Channel<Action> = Channel(Channel.BUFFERED)
+    private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
     val actions: Flow<Action> = _actions.receiveAsFlow()
 
     sealed interface Action {
