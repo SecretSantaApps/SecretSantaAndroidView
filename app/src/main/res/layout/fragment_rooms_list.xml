@@ -6,12 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.screens.rooms_list.RoomsListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/rooms_list_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,6 +23,7 @@
         android:id="@+id/rooms_list_progress_bar"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:fontFamily="@font/open_sans"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

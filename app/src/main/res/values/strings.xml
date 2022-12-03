@@ -24,4 +24,8 @@
     <string name="delete_profile_dialog_confirmation">Are you sure you want to delete your account? This action cannot be undone.</string>
     <string name="sign_in_firebase_button_text">Sign in via firebase</string>
     <string name="create_room_title">Create room</string>
+    <string name="password_input_hint">New password (optional)</string>
+    <string name="maximum_gift_price_hint">Maximum gift price (optional)</string>
+    <string name="date_picker_hint">Choose deadline date (optional)</string>
+    <string name="create_room_button_hint">Create room</string>
 </resources>
