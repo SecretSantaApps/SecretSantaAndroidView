@@ -12,14 +12,23 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import ru.kheynov.secretsanta.data.api.RoomsAPI
 import ru.kheynov.secretsanta.data.api.UserAPI
+import ru.kheynov.secretsanta.data.repositories.RoomsRepositoryImpl
+import ru.kheynov.secretsanta.data.repositories.UsersRepositoryImpl
+import ru.kheynov.secretsanta.domain.repositories.RoomsRepository
 import ru.kheynov.secretsanta.domain.repositories.UsersRepository
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.rooms.CreateRoomUseCase
+import ru.kheynov.secretsanta.domain.use_cases.rooms.DeleteRoomUseCase
+import ru.kheynov.secretsanta.domain.use_cases.rooms.GetRoomInfoUseCase
+import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
+import ru.kheynov.secretsanta.domain.use_cases.rooms.UpdateRoomUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.CheckUserRegisteredUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.DeleteUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.GetSelfInfoUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.RegisterUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.UpdateUserUseCase
+import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.AuthInterceptor
 import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Singleton
@@ -53,15 +62,34 @@ object AppModule {
         OkHttpClient.Builder().addInterceptor(AuthInterceptor(tokenRepository)).build()
 
     @Provides
-    fun provideUseCases(
+    @Singleton
+    fun provideUsersRepository(userAPI: UserAPI): UsersRepository = UsersRepositoryImpl(userAPI)
+
+    @Provides
+    @Singleton
+    fun provideRoomsRepository(roomsAPI: RoomsAPI): RoomsRepository = RoomsRepositoryImpl(roomsAPI)
+
+    @Provides
+    fun provideUserUseCases(
         tokenRepository: TokenRepository,
         usersRepository: UsersRepository,
-    ) = UseCases(
+    ) = UsersUseCases(
         registerUserUseCase = RegisterUserUseCase(tokenRepository, usersRepository),
         deleteUserUseCase = DeleteUserUseCase(tokenRepository, usersRepository),
         updateUserUseCase = UpdateUserUseCase(tokenRepository, usersRepository),
         getSelfInfoUseCase = GetSelfInfoUseCase(tokenRepository, usersRepository),
         checkUserRegistered = CheckUserRegisteredUseCase(tokenRepository, usersRepository),
+    )
+
+    @Provides
+    fun provideRoomsUseCases(
+        tokenRepository: TokenRepository,
+        roomsRepository: RoomsRepository,
+    ) = RoomsUseCases(
+        createRoomUseCase = CreateRoomUseCase(tokenRepository, roomsRepository),
+        deleteRoomUseCase = DeleteRoomUseCase(tokenRepository, roomsRepository),
+        getRoomInfoUseCase = GetRoomInfoUseCase(tokenRepository, roomsRepository),
+        updateRoomUseCase = UpdateRoomUseCase(tokenRepository, roomsRepository),
     )
 
     @Provides
@@ -75,5 +103,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideUsersApi(retrofit: Retrofit): UserAPI = retrofit.create(UserAPI::class.java)
+
+    @Provides
+    @Singleton
+    fun provideRoomsApi(retrofit: Retrofit): RoomsAPI = retrofit.create(RoomsAPI::class.java)
 
 }

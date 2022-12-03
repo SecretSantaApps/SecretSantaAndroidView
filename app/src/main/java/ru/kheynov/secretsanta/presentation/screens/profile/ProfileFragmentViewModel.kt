@@ -2,7 +2,6 @@ package ru.kheynov.secretsanta.presentation.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -10,13 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileFragmentViewModel @Inject constructor(
-    private val useCases: UseCases,
+    private val useCases: UsersUseCases,
 ) : ViewModel() {
     sealed interface State {
         object Loading : State

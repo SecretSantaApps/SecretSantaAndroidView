@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.data.dto.RegisterUser
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ private const val TAG = "RegisterActivityViewModel"
 
 @HiltViewModel
 class RegisterActivityViewModel @Inject constructor(
-    private val useCases: UseCases,
+    private val useCases: UsersUseCases,
     firebaseAuth: FirebaseAuth,
 ) : ViewModel() {
 

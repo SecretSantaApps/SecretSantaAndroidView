@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.data.KeyValueStorage
 import ru.kheynov.secretsanta.databinding.ActivityLoginBinding
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.presentation.MainActivity
 import ru.kheynov.secretsanta.presentation.screens.register_screen.RegisterActivity
 import ru.kheynov.secretsanta.utils.Resource
@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
     lateinit var keyValueStorage: KeyValueStorage
 
     @Inject
-    lateinit var useCases: UseCases
+    lateinit var useCases: UsersUseCases
 
     private lateinit var binding: ActivityLoginBinding
 

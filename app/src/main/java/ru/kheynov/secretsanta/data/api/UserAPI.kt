@@ -6,6 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import ru.kheynov.secretsanta.data.dto.RegisterUser
+import ru.kheynov.secretsanta.data.dto.RoomDTO
 import ru.kheynov.secretsanta.data.dto.UpdateUser
 import ru.kheynov.secretsanta.data.dto.UserInfo
 
@@ -24,4 +25,8 @@ interface UserAPI {
 
     @GET("user")
     suspend fun checkUserRegistered()
+
+
+    @GET("user/rooms")
+    fun getRoomsList(): List<RoomDTO.RoomThumbnailInfo>
 }

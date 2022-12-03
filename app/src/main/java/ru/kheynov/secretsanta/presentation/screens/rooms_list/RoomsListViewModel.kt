@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import ru.kheynov.secretsanta.domain.use_cases.UseCases
+import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.UserNotExistsException
 import javax.inject.Inject
@@ -20,7 +20,7 @@ private const val TAG = "RoomsListViewModel"
 
 @HiltViewModel
 class RoomsListViewModel @Inject constructor(
-    private val useCases: UseCases,
+    private val useCases: UsersUseCases,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State>(State.Loading)
