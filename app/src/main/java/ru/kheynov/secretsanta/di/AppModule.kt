@@ -12,12 +12,22 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import ru.kheynov.secretsanta.data.api.GameAPI
 import ru.kheynov.secretsanta.data.api.RoomsAPI
 import ru.kheynov.secretsanta.data.api.UserAPI
+import ru.kheynov.secretsanta.data.repositories.GameRepositoryImpl
 import ru.kheynov.secretsanta.data.repositories.RoomsRepositoryImpl
 import ru.kheynov.secretsanta.data.repositories.UsersRepositoryImpl
+import ru.kheynov.secretsanta.domain.repositories.GameRepository
 import ru.kheynov.secretsanta.domain.repositories.RoomsRepository
 import ru.kheynov.secretsanta.domain.repositories.UsersRepository
+import ru.kheynov.secretsanta.domain.use_cases.game.GameUseCases
+import ru.kheynov.secretsanta.domain.use_cases.game.GetGameInfoUseCase
+import ru.kheynov.secretsanta.domain.use_cases.game.JoinGameUseCase
+import ru.kheynov.secretsanta.domain.use_cases.game.KickUserUseCase
+import ru.kheynov.secretsanta.domain.use_cases.game.LeaveGameUseCase
+import ru.kheynov.secretsanta.domain.use_cases.game.StartGameUseCase
+import ru.kheynov.secretsanta.domain.use_cases.game.StopGameUseCase
 import ru.kheynov.secretsanta.domain.use_cases.rooms.CreateRoomUseCase
 import ru.kheynov.secretsanta.domain.use_cases.rooms.DeleteRoomUseCase
 import ru.kheynov.secretsanta.domain.use_cases.rooms.GetRoomInfoUseCase
@@ -63,11 +73,35 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideRetrofit(httpClient: OkHttpClient): Retrofit {
+        val contentType = "application/json".toMediaType()
+        return Retrofit.Builder().addConverterFactory(json.asConverterFactory(contentType))
+            .baseUrl(BASE_URL).client(httpClient).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUsersApi(retrofit: Retrofit): UserAPI = retrofit.create(UserAPI::class.java)
+
+    @Provides
+    @Singleton
+    fun provideRoomsApi(retrofit: Retrofit): RoomsAPI = retrofit.create(RoomsAPI::class.java)
+
+    @Provides
+    @Singleton
+    fun provideGameApi(retrofit: Retrofit): GameAPI = retrofit.create(GameAPI::class.java)
+
+    @Provides
+    @Singleton
     fun provideUsersRepository(userAPI: UserAPI): UsersRepository = UsersRepositoryImpl(userAPI)
 
     @Provides
     @Singleton
     fun provideRoomsRepository(roomsAPI: RoomsAPI): RoomsRepository = RoomsRepositoryImpl(roomsAPI)
+
+    @Provides
+    @Singleton
+    fun provideGameRepository(gameAPI: GameAPI): GameRepository = GameRepositoryImpl(gameAPI)
 
     @Provides
     fun provideUserUseCases(
@@ -93,19 +127,15 @@ object AppModule {
     )
 
     @Provides
-    @Singleton
-    fun provideRetrofit(httpClient: OkHttpClient): Retrofit {
-        val contentType = "application/json".toMediaType()
-        return Retrofit.Builder().addConverterFactory(json.asConverterFactory(contentType))
-            .baseUrl(BASE_URL).client(httpClient).build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUsersApi(retrofit: Retrofit): UserAPI = retrofit.create(UserAPI::class.java)
-
-    @Provides
-    @Singleton
-    fun provideRoomsApi(retrofit: Retrofit): RoomsAPI = retrofit.create(RoomsAPI::class.java)
-
+    fun provideGameUseCases(
+        tokenRepository: TokenRepository,
+        gameRepository: GameRepository,
+    ) = GameUseCases(
+        joinGameUseCase = JoinGameUseCase(tokenRepository, gameRepository),
+        leaveGameUseCase = LeaveGameUseCase(tokenRepository, gameRepository),
+        kickUserUseCase = KickUserUseCase(tokenRepository, gameRepository),
+        startGameUseCase = StartGameUseCase(tokenRepository, gameRepository),
+        stopGameUseCase = StopGameUseCase(tokenRepository, gameRepository),
+        getGameInfoUseCase = GetGameInfoUseCase(tokenRepository, gameRepository),
+    )
 }

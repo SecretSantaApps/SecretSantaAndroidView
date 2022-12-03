@@ -1,9 +1,9 @@
 package ru.kheynov.secretsanta.domain.repositories
 
-import ru.kheynov.secretsanta.data.dto.RegisterUser
-import ru.kheynov.secretsanta.data.dto.RoomDTO
-import ru.kheynov.secretsanta.data.dto.UpdateUser
-import ru.kheynov.secretsanta.data.dto.UserInfo
+import ru.kheynov.secretsanta.domain.entities.RegisterUser
+import ru.kheynov.secretsanta.domain.entities.RoomDTO
+import ru.kheynov.secretsanta.domain.entities.UpdateUser
+import ru.kheynov.secretsanta.domain.entities.UserInfo
 import ru.kheynov.secretsanta.utils.Resource
 
 interface UsersRepository {

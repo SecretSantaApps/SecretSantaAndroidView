@@ -1,6 +1,6 @@
 package ru.kheynov.secretsanta.domain.repositories
 
-import ru.kheynov.secretsanta.data.dto.RoomDTO.*
+import ru.kheynov.secretsanta.domain.entities.RoomDTO.*
 import ru.kheynov.secretsanta.utils.Resource
 
 interface RoomsRepository {

@@ -1,4 +1,4 @@
-package ru.kheynov.secretsanta.data.dto
+package ru.kheynov.secretsanta.domain.entities
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

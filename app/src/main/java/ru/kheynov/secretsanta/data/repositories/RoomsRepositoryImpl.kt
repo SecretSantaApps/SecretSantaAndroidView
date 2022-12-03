@@ -2,7 +2,7 @@ package ru.kheynov.secretsanta.data.repositories
 
 import retrofit2.HttpException
 import ru.kheynov.secretsanta.data.api.RoomsAPI
-import ru.kheynov.secretsanta.data.dto.RoomDTO.*
+import ru.kheynov.secretsanta.domain.entities.RoomDTO.*
 import ru.kheynov.secretsanta.domain.repositories.RoomsRepository
 import ru.kheynov.secretsanta.utils.ForbiddenException
 import ru.kheynov.secretsanta.utils.Resource

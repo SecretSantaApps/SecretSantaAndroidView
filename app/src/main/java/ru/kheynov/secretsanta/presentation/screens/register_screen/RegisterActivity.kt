@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import ru.kheynov.secretsanta.data.dto.RegisterUser
+import ru.kheynov.secretsanta.domain.entities.RegisterUser
 import ru.kheynov.secretsanta.databinding.ActivityRegisterBinding
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 

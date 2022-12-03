@@ -5,10 +5,10 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import ru.kheynov.secretsanta.data.dto.RegisterUser
-import ru.kheynov.secretsanta.data.dto.RoomDTO
-import ru.kheynov.secretsanta.data.dto.UpdateUser
-import ru.kheynov.secretsanta.data.dto.UserInfo
+import ru.kheynov.secretsanta.domain.entities.RegisterUser
+import ru.kheynov.secretsanta.domain.entities.RoomDTO
+import ru.kheynov.secretsanta.domain.entities.UpdateUser
+import ru.kheynov.secretsanta.domain.entities.UserInfo
 
 interface UserAPI {
     @POST("user")

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import ru.kheynov.secretsanta.data.dto.RoomDTO
+import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
 import java.time.LocalDate
 import javax.inject.Inject

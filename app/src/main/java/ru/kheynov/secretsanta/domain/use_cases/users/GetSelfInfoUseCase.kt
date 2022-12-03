@@ -1,6 +1,6 @@
 package ru.kheynov.secretsanta.domain.use_cases.users
 
-import ru.kheynov.secretsanta.data.dto.UserInfo
+import ru.kheynov.secretsanta.domain.entities.UserInfo
 import ru.kheynov.secretsanta.domain.repositories.UsersRepository
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
