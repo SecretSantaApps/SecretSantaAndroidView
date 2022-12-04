@@ -15,11 +15,29 @@
         android:name="ru.kheynov.secretsanta.presentation.screens.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
     <fragment
         android:id="@+id/createRoomFragment"
         android:name="ru.kheynov.secretsanta.presentation.screens.create_room.CreateRoomFragment"
         android:label="Create room"
-        tools:layout="@layout/fragment_create_room" />
+        tools:layout="@layout/fragment_create_room">
+        <action
+            android:id="@+id/action_createRoomFragment_to_createdSuccessfullyFragment"
+            app:destination="@id/createdSuccessfully" >
+            <argument
+                android:name="roomName"
+                app:argType="string" />
+            <argument
+                android:name="roomPassword"
+                app:argType="string" />
+            <argument
+                android:name="maxPrice"
+                app:argType="string" />
+            <argument
+                android:name="date"
+                app:argType="string" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/editUser"
@@ -29,8 +47,21 @@
 
     <fragment
         android:id="@+id/createdSuccessfully"
-        android:name="ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfully"
+        android:name="ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfullyFragment"
         android:label="Created successfully"
-        tools:layout="@layout/fragment_created_successfully" />
+        tools:layout="@layout/fragment_created_successfully" >
+        <argument
+            android:name="roomName"
+            app:argType="string" />
+        <argument
+            android:name="roomPassword"
+            app:argType="string" />
+        <argument
+            android:name="maxPrice"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

@@ -13,6 +13,9 @@ import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.RoomAlreadyExistsException
+import ru.kheynov.secretsanta.utils.UserNotExistsException
+import java.time.LocalDate
 import javax.inject.Inject
 
 private const val TAG = "CreateRoomVM"
@@ -27,6 +30,7 @@ class CreateRoomFragmentViewModel @Inject constructor(
     sealed interface State {
         object Loading : State
         object Idle : State
+        data class Loaded(val room: RoomDTO.Info) : State
     }
 
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
@@ -37,22 +41,42 @@ class CreateRoomFragmentViewModel @Inject constructor(
         object ShowSuccess : Action
     }
 
+    private var _date: MutableStateFlow<LocalDate?> = MutableStateFlow(null)
+    val date: StateFlow<LocalDate?> = _date
+
     fun createRoom(room: RoomDTO.Create) {
         viewModelScope.launch {
             _state.value = State.Loading
+            if (room.roomName.isBlank()) {
+                _actions.send(Action.ShowError("Room name can't be empty"))
+                _state.value = State.Idle
+                return@launch
+            }
             when (val res = useCases.createRoomUseCase(room)) {
                 is Resource.Success -> {
-                    _state.value = State.Idle
+                    _state.value = State.Loaded(res.result)
                     Log.i(TAG, res.result.toString())
                     _actions.send(Action.ShowSuccess)
                 }
                 is Resource.Failure -> {
                     _state.value = State.Idle
                     Log.e(TAG, "Error", res.exception)
-                    Action.ShowError(res.exception.cause.toString())
+                    val errorMsg = when (res.exception) {
+                        is RoomAlreadyExistsException -> "Room already exists"
+                        is UserNotExistsException -> "User not exists"
+                        else -> "Unknown error"
+                    }
+                    _actions.send(Action.ShowError(errorMsg))
                 }
             }
         }
     }
 
+    fun setDate(localDate: LocalDate?) {
+        _date.value = localDate
+    }
+
+    fun clearDate() {
+        _date.value = null
+    }
 }

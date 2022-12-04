@@ -72,6 +72,7 @@
         android:fontFamily="@font/open_sans"
         android:paddingVertical="4dp"
         android:text="@string/date_picker_hint"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         app:drawableEndCompat="@drawable/ic_baseline_edit_calendar_24"
         app:layout_constraintEnd_toEndOf="parent"

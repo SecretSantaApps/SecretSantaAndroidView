@@ -30,4 +30,8 @@
     <string name="create_room_button_hint">Create room</string>
     <string name="room_created_successfully">Room created successfully!</string>
     <string name="create_another_room">Create yet another</string>
+    <string name="room_name_placeholder">Room name: %1$s</string>
+    <string name="room_password_placeholder">Room password: %1$s</string>
+    <string name="room_max_price_placeholder">Max price: %1$s</string>
+    <string name="room_deadline_placeholder">Deadline: %1$s</string>
 </resources>
