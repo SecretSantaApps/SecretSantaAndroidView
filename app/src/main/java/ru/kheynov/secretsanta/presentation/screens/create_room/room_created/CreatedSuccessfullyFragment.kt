@@ -33,14 +33,14 @@ class CreatedSuccessfullyFragment : Fragment() {
             roomName.text = getString(R.string.room_name_placeholder, args.roomName)
             roomPassword.text = getString(R.string.room_password_placeholder, args.roomPassword)
             args.maxPrice.run {
-                if (this.contains("0") || this.contains("null")) {
+                if (contains("0") || contains("null")) {
                     roomMaxPrice.visibility = View.GONE
                 } else {
                     roomMaxPrice.text = getString(R.string.room_max_price_placeholder, this)
                 }
             }
             args.date.run {
-                if (this.contains("null")) {
+                if (contains("null")) {
                     roomDate.visibility = View.GONE
                 } else {
                     roomDate.text = getString(R.string.room_deadline_placeholder, this)
