@@ -14,8 +14,8 @@ sealed interface RoomDTO {
         val password: String,
         @SerialName("owner_id") val ownerId: String,
         @SerialName("max_price") val maxPrice: Int?,
-        @SerialName("game_started") val gameStarted: Boolean,
-        @SerialName("members_count") val membersCount: Int,
+        @SerialName("game_started") val gameStarted: Boolean = false,
+        @SerialName("members_count") val membersCount: Int?,
     ) : RoomDTO
 
     @Serializable

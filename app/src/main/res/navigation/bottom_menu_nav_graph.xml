@@ -17,7 +17,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/createRoomFragment"
-        android:name="ru.kheynov.secretsanta.presentation.screens.room_details.CreateRoomFragment"
+        android:name="ru.kheynov.secretsanta.presentation.screens.create_room.CreateRoomFragment"
         android:label="Create room"
         tools:layout="@layout/fragment_create_room" />
 
@@ -26,4 +26,11 @@
         android:name="ru.kheynov.secretsanta.presentation.screens.profile.EditUserFragment"
         android:label="Edit user"
         tools:layout="@layout/fragment_edit_user" />
+
+    <fragment
+        android:id="@+id/createdSuccessfully"
+        android:name="ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfully"
+        android:label="Created successfully"
+        tools:layout="@layout/fragment_created_successfully" />
+
 </navigation>

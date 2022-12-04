@@ -28,4 +28,6 @@
     <string name="maximum_gift_price_hint">Maximum gift price (optional)</string>
     <string name="date_picker_hint">Choose deadline date (optional)</string>
     <string name="create_room_button_hint">Create room</string>
+    <string name="room_created_successfully">Room created successfully!</string>
+    <string name="create_another_room">Create yet another</string>
 </resources>
