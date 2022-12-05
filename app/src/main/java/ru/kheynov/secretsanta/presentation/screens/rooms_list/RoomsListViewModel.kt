@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.domain.entities.RoomItem
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.UserNotExistsException
@@ -28,7 +29,7 @@ class RoomsListViewModel @Inject constructor(
 
     sealed interface State {
         object Loading : State
-        data class Loaded(val username: String) : State
+        object Idle : State
     }
 
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
@@ -39,30 +40,44 @@ class RoomsListViewModel @Inject constructor(
         object RouteToLogin : Action
     }
 
-    fun loadData() {
+    private val _rooms = MutableStateFlow(listOf<RoomItem>())
+    val rooms: StateFlow<List<RoomItem>> = _rooms
+
+    fun loadRooms() {
         viewModelScope.launch {
-            //TODO: test data, change in production
             _state.value = State.Loading
-            when (val res = useCases.getSelfInfoUseCase()) {
+            when (val result = useCases.getRoomsListUseCase()) {
+                is Resource.Success -> {
+                    _rooms.value = result.result.map {
+                        RoomItem(
+                            it.name,
+                            it.membersCount.toString(),
+                            it.gameStarted.toString(),
+                            it.date.toString(),
+                            0
+                        )
+                    }
+                    _state.value = State.Idle
+                }
                 is Resource.Failure -> {
-                    when (res.exception) {
+                    when (result.exception) {
+                        is CancellationException -> {
+                            Log.d(TAG, "loadRooms: CancellationException")
+                        }
                         is UserNotExistsException -> {
-                            Log.e(TAG, "User not registered")
                             _actions.send(Action.RouteToLogin)
                         }
-                        is CancellationException -> {
-                            Log.i(TAG, "Job cancelled")
-                        }
                         else -> {
-                            Log.e(TAG, "Something went wrong", res.exception)
-                            _actions.send(Action.ShowError(res.exception.message.toString()))
+                            _actions.send(
+                                Action.ShowError(
+                                    result.exception.message ?: "Unknown error"
+                                )
+                            )
                         }
                     }
-                }
-                is Resource.Success -> {
-                    _state.value = State.Loaded(res.result.username)
                 }
             }
         }
     }
+
 }

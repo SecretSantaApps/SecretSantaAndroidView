@@ -3,6 +3,7 @@ package ru.kheynov.secretsanta.data.api
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 import ru.kheynov.secretsanta.domain.entities.GameDTO.*
 
 interface GameAPI {
@@ -22,5 +23,5 @@ interface GameAPI {
     suspend fun stopGame(@Body request: Stop)
 
     @GET("game/info")
-    suspend fun getGameInfo(@Body request: GetRoomInfo): RoomInfo
+    suspend fun getGameInfo(@Query("roomName") roomName: String): RoomInfo
 }

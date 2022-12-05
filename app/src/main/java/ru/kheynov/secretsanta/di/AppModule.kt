@@ -35,6 +35,7 @@ import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
 import ru.kheynov.secretsanta.domain.use_cases.rooms.UpdateRoomUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.CheckUserRegisteredUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.DeleteUserUseCase
+import ru.kheynov.secretsanta.domain.use_cases.users.GetRoomsListUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.GetSelfInfoUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.RegisterUserUseCase
 import ru.kheynov.secretsanta.domain.use_cases.users.UpdateUserUseCase
@@ -113,6 +114,7 @@ object AppModule {
         updateUserUseCase = UpdateUserUseCase(tokenRepository, usersRepository),
         getSelfInfoUseCase = GetSelfInfoUseCase(tokenRepository, usersRepository),
         checkUserRegistered = CheckUserRegisteredUseCase(tokenRepository, usersRepository),
+        getRoomsListUseCase = GetRoomsListUseCase(tokenRepository, usersRepository),
     )
 
     @Provides

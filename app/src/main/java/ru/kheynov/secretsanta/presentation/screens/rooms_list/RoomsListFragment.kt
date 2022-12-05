@@ -2,6 +2,7 @@ package ru.kheynov.secretsanta.presentation.screens.rooms_list
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +12,23 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.FragmentRoomsListBinding
-import ru.kheynov.secretsanta.presentation.screens.rooms_list.RoomsListViewModel.State
+import ru.kheynov.secretsanta.domain.entities.RoomItem
+import ru.kheynov.secretsanta.utils.dateFormatterWithoutYear
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class RoomsListFragment : Fragment() {
     private lateinit var binding: FragmentRoomsListBinding
 
     private val viewModel by viewModels<RoomsListViewModel>()
+    private lateinit var roomsListAdapter: RoomsListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,29 +40,62 @@ class RoomsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadData()
+        roomsListAdapter = RoomsListAdapter(::onRoomClick)
+        binding.apply {
+            roomsList.adapter = roomsListAdapter
+            roomsList.layoutManager = LinearLayoutManager(context)
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.rooms.collect {
+                    val rooms = it.map { room ->
+                        RoomItem(
+                            room.roomName,
+                            getString(
+                                R.string.members_count_placeholder, room.membersCount
+                            ),
+                            with(room.gameState) {
+                                if (this == "false") getString(R.string.waiting_for_start)
+                                else getString(R.string.game_started_text)
+                            },
+                            if (room.date != "null") getString(
+                                R.string.deadline_placeholder, LocalDate.parse(
+                                    room.date
+                                ).format(dateFormatterWithoutYear)
+                            ) else room.date,
+                            gameStateColor = if (room.gameState == "false") context?.getColor(
+                                R.color.colorAccent
+                            ) else context?.getColor(R.color.green)
+                        )
+                    }
+                    roomsListAdapter.updateRoomsList(rooms)
+                }
+            }
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect { state ->
                     binding.apply {
                         roomsListProgressBar.visibility =
-                            if (state == State.Loading) View.VISIBLE
-                            else View.GONE
-                        roomsListText.visibility =
-                            if (state is State.Loaded) View.VISIBLE
-                            else View.GONE
-                        roomsListText.text =
-                            if (state is State.Loaded) "Username: ${state.username}"
-                            else ""
+                            if (state is RoomsListViewModel.State.Loading) View.VISIBLE else View.GONE
+                        roomsList.visibility =
+                            if (state is RoomsListViewModel.State.Idle) View.VISIBLE else View.GONE
                     }
                 }
             }
         }
+    }
 
+    private fun onRoomClick(room: RoomItem) {
+        val navAction = RoomsListFragmentDirections.actionRoomsListFragmentToRoomDetailsFragment(
+            roomName = room.roomName
+        )
+        findNavController().navigate(navAction)
     }
 
     override fun onResume() {
         super.onResume()
+        viewModel.loadRooms()
         lifecycleScope.launch {
             viewModel.actions.collect {
                 handleAction(it, context!!)
@@ -66,8 +106,12 @@ class RoomsListFragment : Fragment() {
     private fun handleAction(action: RoomsListViewModel.Action, context: Context) {
         when (action) {
             RoomsListViewModel.Action.RouteToLogin -> navigateToLoginScreen(context)
-            is RoomsListViewModel.Action.ShowError -> Toast.makeText(context, action.error, Toast
-                .LENGTH_SHORT).show()
+            is RoomsListViewModel.Action.ShowError -> {
+                Log.e(tag, action.error)
+                Toast.makeText(
+                    context, action.error, Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }

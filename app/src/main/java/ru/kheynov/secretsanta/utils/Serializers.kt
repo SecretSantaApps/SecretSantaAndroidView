@@ -1,4 +1,4 @@
-package ru.kheynov.utils
+package ru.kheynov.secretsanta.utils
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind

@@ -2,7 +2,7 @@ package ru.kheynov.secretsanta.domain.entities
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.kheynov.utils.LocalDateSerializer
+import ru.kheynov.secretsanta.utils.LocalDateSerializer
 import java.time.LocalDate
 
 sealed interface GameDTO {
@@ -42,6 +42,7 @@ sealed interface GameDTO {
     data class RoomInfo(
         @SerialName("room_name") val roomName: String,
         @SerialName("owner_id") val ownerId: String,
+        val password: String?,
         @Serializable(with = LocalDateSerializer::class) val date: LocalDate?,
         @SerialName("max_price") val max_price: Int?,
         val users: List<UserInfo>,

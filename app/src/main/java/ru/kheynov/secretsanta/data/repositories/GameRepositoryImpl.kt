@@ -25,23 +25,21 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.joinRoom(request)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            if (e.message().contains("User")) UserNotExistsException()
-                            else RoomNotExistsException()
-                        }
-                        403 -> ForbiddenException()
-                        409 -> {
-                            if (e.message().contains("Game")) GameAlreadyStartedException()
-                            else UserAlreadyInRoomException()
-                        }
-                        else -> e
+            if (e is HttpException) Resource.Failure(
+                when (e.code()) {
+                    400 -> {
+                        if (e.message().contains("User")) UserNotExistsException()
+                        else RoomNotExistsException()
                     }
-                )
-            else
-                Resource.Failure(e)
+                    403 -> ForbiddenException()
+                    409 -> {
+                        if (e.message().contains("Game")) GameAlreadyStartedException()
+                        else UserAlreadyInRoomException()
+                    }
+                    else -> e
+                }
+            )
+            else Resource.Failure(e)
         }
     }
 
@@ -50,20 +48,18 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.leaveRoom(request)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            if (e.message().contains("User")) UserNotExistsException()
-                            else RoomNotExistsException()
-                        }
-                        403 -> UserNotInTheRoomException()
-                        409 -> GameAlreadyStartedException()
-                        else -> e
+            if (e is HttpException) Resource.Failure(
+                when (e.code()) {
+                    400 -> {
+                        if (e.message().contains("User")) UserNotExistsException()
+                        else RoomNotExistsException()
                     }
-                )
-            else
-                Resource.Failure(e)
+                    403 -> UserNotInTheRoomException()
+                    409 -> GameAlreadyStartedException()
+                    else -> e
+                }
+            )
+            else Resource.Failure(e)
         }
     }
 
@@ -72,26 +68,21 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.kickUser(request)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            with(e.message()) {
-                                when {
-                                    contains("User") -> if (contains("exists"))
-                                        UserNotExistsException() else UserNotInTheRoomException()
-                                    contains("Room") -> RoomNotExistsException()
-                                    else -> e
-                                }
-                            }
+            if (e is HttpException) Resource.Failure(when (e.code()) {
+                400 -> {
+                    with(e.message()) {
+                        when {
+                            contains("User") -> if (contains("exists")) UserNotExistsException() else UserNotInTheRoomException()
+                            contains("Room") -> RoomNotExistsException()
+                            else -> e
                         }
-                        403 -> ForbiddenException()
-                        409 -> GameAlreadyStartedException()
-                        else -> e
                     }
-                )
-            else
-                Resource.Failure(e)
+                }
+                403 -> ForbiddenException()
+                409 -> GameAlreadyStartedException()
+                else -> e
+            })
+            else Resource.Failure(e)
         }
     }
 
@@ -100,25 +91,21 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.startGame(request)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            with(e.message()) {
-                                when {
-                                    contains("User") -> UserNotExistsException()
-                                    contains("Room") -> RoomNotExistsException()
-                                    else -> NotEnoughPlayersException()
-                                }
-                            }
+            if (e is HttpException) Resource.Failure(when (e.code()) {
+                400 -> {
+                    with(e.message()) {
+                        when {
+                            contains("User") -> UserNotExistsException()
+                            contains("Room") -> RoomNotExistsException()
+                            else -> NotEnoughPlayersException()
                         }
-                        403 -> ForbiddenException()
-                        409 -> GameAlreadyStartedException()
-                        else -> e
                     }
-                )
-            else
-                Resource.Failure(e)
+                }
+                403 -> ForbiddenException()
+                409 -> GameAlreadyStartedException()
+                else -> e
+            })
+            else Resource.Failure(e)
         }
     }
 
@@ -127,51 +114,43 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.stopGame(request)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            with(e.message()) {
-                                when {
-                                    contains("User") -> UserNotExistsException()
-                                    contains("Room") -> RoomNotExistsException()
-                                    else -> e
-                                }
-                            }
+            if (e is HttpException) Resource.Failure(when (e.code()) {
+                400 -> {
+                    with(e.message()) {
+                        when {
+                            contains("User") -> UserNotExistsException()
+                            contains("Room") -> RoomNotExistsException()
+                            else -> e
                         }
-                        403 -> ForbiddenException()
-                        409 -> GameAlreadyStoppedException()
-                        else -> e
                     }
-                )
-            else
-                Resource.Failure(e)
+                }
+                403 -> ForbiddenException()
+                409 -> GameAlreadyStoppedException()
+                else -> e
+            })
+            else Resource.Failure(e)
         }
     }
 
     override suspend fun getGameInfo(request: GameDTO.GetRoomInfo): Resource<GameDTO.RoomInfo> {
         return try {
-            val res = gameAPI.getGameInfo(request)
+            val res = gameAPI.getGameInfo(request.roomName)
             Resource.Success(res)
         } catch (e: Exception) {
-            if (e is HttpException)
-                Resource.Failure(
-                    when (e.code()) {
-                        400 -> {
-                            with(e.message()) {
-                                when {
-                                    contains("User") -> UserNotExistsException()
-                                    contains("Room") -> RoomNotExistsException()
-                                    else -> e
-                                }
-                            }
+            if (e is HttpException) Resource.Failure(when (e.code()) {
+                400 -> {
+                    with(e.message()) {
+                        when {
+                            contains("User") -> UserNotExistsException()
+                            contains("Room") -> RoomNotExistsException()
+                            else -> e
                         }
-                        403 -> ForbiddenException()
-                        else -> e
                     }
-                )
-            else
-                Resource.Failure(e)
+                }
+                403 -> ForbiddenException()
+                else -> e
+            })
+            else Resource.Failure(e)
         }
     }
 }

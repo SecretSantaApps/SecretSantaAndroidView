@@ -12,3 +12,5 @@ fun navigateToLoginScreen(context: Context) {
 }
 
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+val dateFormatterWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM")

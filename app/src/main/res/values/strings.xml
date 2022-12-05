@@ -32,6 +32,16 @@
     <string name="create_another_room">Create yet another</string>
     <string name="room_name_placeholder">Room name: %1$s</string>
     <string name="room_password_placeholder">Room password: %1$s</string>
-    <string name="room_max_price_placeholder">Max price: %1$s</string>
+    <string name="room_max_price_placeholder">Max gift price: %1$s</string>
     <string name="room_deadline_placeholder">Deadline: %1$s</string>
+    <string name="rooms_list_title">Rooms list</string>
+    <string name="members_count_placeholder">%1$s members</string>
+    <string name="game_started_text">Game started</string>
+    <string name="waiting_for_start">Waiting for start</string>
+    <string name="deadline_placeholder">Until: %1$s</string>
+    <string name="room_players_title">Room Players</string>
+    <string name="room_owner_placeholder">Room owner: %1$s</string>
+    <string name="room_date_placeholder">Deadline: %1$s</string>
+    <string name="room_recipient_placeholder">Your gift recipient: %1$s</string>
+    <string name="invite_user">Invite user</string>
 </resources>

@@ -26,7 +26,6 @@ interface UserAPI {
     @GET("user")
     suspend fun checkUserRegistered()
 
-
     @GET("user/rooms")
-    fun getRoomsList(): List<RoomDTO.RoomThumbnailInfo>
+    suspend fun getRoomsList(): List<RoomDTO.RoomThumbnailInfo>
 }

@@ -6,4 +6,5 @@ data class UsersUseCases(
     val updateUserUseCase: UpdateUserUseCase,
     val getSelfInfoUseCase: GetSelfInfoUseCase,
     val checkUserRegistered: CheckUserRegisteredUseCase,
+    val getRoomsListUseCase: GetRoomsListUseCase,
 )

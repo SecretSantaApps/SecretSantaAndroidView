@@ -2,7 +2,7 @@ package ru.kheynov.secretsanta.domain.entities
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import ru.kheynov.utils.LocalDateSerializer
+import ru.kheynov.secretsanta.utils.LocalDateSerializer
 import java.time.LocalDate
 
 sealed interface RoomDTO {
