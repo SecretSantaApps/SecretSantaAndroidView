@@ -44,4 +44,9 @@
     <string name="room_date_placeholder">Deadline: %1$s</string>
     <string name="room_recipient_placeholder">Your gift recipient: %1$s</string>
     <string name="invite_user">Invite user</string>
+    <string name="start_game">Start game</string>
+    <string name="stop_game">Stop game</string>
+    <string name="not_enough_players">Not enough players</string>
+    <string name="block_button">block button</string>
+    <string name="leave_button">leave button</string>
 </resources>
