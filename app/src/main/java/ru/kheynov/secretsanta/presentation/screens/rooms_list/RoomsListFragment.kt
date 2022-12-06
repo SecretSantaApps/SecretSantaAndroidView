@@ -44,21 +44,25 @@ class RoomsListFragment : Fragment() {
         binding.apply {
             roomsList.adapter = roomsListAdapter
             roomsList.layoutManager = LinearLayoutManager(context)
+            joinRoomButton.setOnClickListener {
+                findNavController().navigate(R.id.joinRoom)
+            }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.rooms.collect {
                     val rooms = it.map { room ->
                         RoomItem(
-                            room.roomName,
-                            getString(
+                            roomId = room.roomId,
+                            roomName = room.roomName,
+                            membersCount = getString(
                                 R.string.members_count_placeholder, room.membersCount
                             ),
-                            with(room.gameState) {
+                            gameState = with(room.gameState) {
                                 if (this == "false") getString(R.string.waiting_for_start)
                                 else getString(R.string.game_started_text)
                             },
-                            if (room.date != "null") getString(
+                            date = if (room.date != "null") getString(
                                 R.string.deadline_placeholder, LocalDate.parse(
                                     room.date
                                 ).format(dateFormatterWithoutYear)
@@ -88,7 +92,7 @@ class RoomsListFragment : Fragment() {
 
     private fun onRoomClick(room: RoomItem) {
         val navAction = RoomsListFragmentDirections.actionRoomsListFragmentToRoomDetailsFragment(
-            roomName = room.roomName
+            roomId = room.roomId
         )
         findNavController().navigate(navAction)
     }

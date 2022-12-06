@@ -1,6 +1,5 @@
 package ru.kheynov.secretsanta.domain.use_cases.game
 
-import ru.kheynov.secretsanta.domain.entities.GameDTO
 import ru.kheynov.secretsanta.domain.repositories.GameRepository
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
@@ -11,9 +10,10 @@ class JoinGameUseCase @Inject constructor(
     private val gameRepository: GameRepository,
 ) {
     suspend operator fun invoke(
-        request: GameDTO.Join,
+        roomId: String,
+        password: String
     ): Resource<Unit> {
         tokenRepository.fetchToken()
-        return gameRepository.joinRoom(request)
+        return gameRepository.joinRoom(roomId, password)
     }
 }

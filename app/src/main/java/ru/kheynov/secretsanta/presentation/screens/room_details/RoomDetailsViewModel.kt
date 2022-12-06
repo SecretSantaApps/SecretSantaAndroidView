@@ -39,23 +39,24 @@ class RoomDetailsViewModel @Inject constructor(
     private val _state = MutableStateFlow<State>(State.Loading)
     val state: StateFlow<State> = _state
 
-    private var roomName: String? = null
+    private var roomId: String? = null
 
-    fun setRoomName(roomName: String) {
-        this.roomName = roomName
+    fun setRoomId(roomId: String) {
+        this.roomId = roomId
     }
 
     fun loadInfo() {
         viewModelScope.launch {
             _state.value = State.Loading
-            if (roomName == null) {
+            if (roomId.isNullOrBlank()) {
                 _actions.send(Action.ShowError("Room name cannot be null"))
                 return@launch
             }
             val userId = (userUseCases.getSelfInfoUseCase() as Resource.Success).result.userId
             //TODO: rewrite
+            Log.i(TAG, "roomId: $roomId")
             when (val res = gameUseCases.getGameInfoUseCase(
-                GameDTO.GetRoomInfo(roomName.toString())
+                roomId!!
             )) {
                 is Resource.Success -> {
                     _state.value = State.Loaded(res.result, userId)
@@ -70,10 +71,11 @@ class RoomDetailsViewModel @Inject constructor(
 
     fun startGame() {
         viewModelScope.launch {
-            when (val res = gameUseCases.startGameUseCase(GameDTO.Start(roomName ?: run {
-                _actions.send(Action.ShowError("Room name is null"))
+            if (roomId.isNullOrBlank()) {
+                _actions.send(Action.ShowError("Room ID cannot be null"))
                 return@launch
-            }))) {
+            }
+            when (val res = gameUseCases.startGameUseCase(roomId!!)) {
                 is Resource.Failure -> {
                     _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
                 }
@@ -84,12 +86,11 @@ class RoomDetailsViewModel @Inject constructor(
 
     fun stopGame() {
         viewModelScope.launch {
-            when (val res = gameUseCases.stopGameUseCase(
-                GameDTO.Stop(roomName ?: run {
-                    _actions.send(Action.ShowError("Room name is null"))
-                    return@launch
-                })
-            )) {
+            if (roomId.isNullOrBlank()) {
+                _actions.send(Action.ShowError("Room ID cannot be null"))
+                return@launch
+            }
+            when (val res = gameUseCases.stopGameUseCase(roomId!!)) {
                 is Resource.Failure -> _actions.send(Action.ShowError(res.exception.toString()))
                 is Resource.Success -> loadInfo()
             }
@@ -98,9 +99,9 @@ class RoomDetailsViewModel @Inject constructor(
 
     fun kickUser(user: String) {
         viewModelScope.launch {
-            val roomName = (_state.value as State.Loaded).roomInfo.roomName
+            val roomId = (_state.value as State.Loaded).roomInfo.id
             _state.value = State.Loading
-            when (val res = gameUseCases.kickUserUseCase(GameDTO.KickUser(user, roomName))) {
+            when (val res = gameUseCases.kickUserUseCase(GameDTO.KickUser(user, roomId))) {
                 is Resource.Success -> {
                     loadInfo()
                 }
@@ -111,9 +112,9 @@ class RoomDetailsViewModel @Inject constructor(
 
     fun leaveRoom() {
         viewModelScope.launch {
-            val roomName = (_state.value as State.Loaded).roomInfo.roomName
+            val roomId = (_state.value as State.Loaded).roomInfo.id
             _state.value = State.Loading
-            when (val res = gameUseCases.leaveGameUseCase(GameDTO.Leave(roomName))) {
+            when (val res = gameUseCases.leaveGameUseCase(roomId)) {
                 is Resource.Success -> {
                     _actions.send(Action.NavigateBack)
                 }

@@ -49,8 +49,7 @@ class CreateRoomFragment : Fragment() {
                 viewModel.date.collect {
                     binding.pickDeadlineDate.text = it?.run {
                         getString(
-                            R.string.room_deadline_placeholder,
-                            it.format(dateFormatter).toString()
+                            R.string.room_deadline_placeholder, it.format(dateFormatter).toString()
                         )
                     } ?: getString(
                         R.string.date_picker_hint
@@ -106,14 +105,10 @@ class CreateRoomFragment : Fragment() {
         binding.apply {
             createRoomButton.visibility =
                 if (state is CreateRoomFragmentViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomNameInput.visibility =
-                if (state is CreateRoomFragmentViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomPasswordInput.visibility =
-                if (state is CreateRoomFragmentViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomMaxPriceInput.visibility =
-                if (state is CreateRoomFragmentViewModel.State.Loading) View.GONE else View.VISIBLE
-            pickDeadlineDate.visibility =
-                if (state is CreateRoomFragmentViewModel.State.Loading) View.GONE else View.VISIBLE
+            roomNameInput.visibility = createRoomButton.visibility
+            roomPasswordInput.visibility = createRoomButton.visibility
+            roomMaxPriceInput.visibility = createRoomButton.visibility
+            pickDeadlineDate.visibility = createRoomButton.visibility
             createRoomProgressBar.visibility =
                 if (state is CreateRoomFragmentViewModel.State.Loading) View.VISIBLE else View.GONE
         }
@@ -134,7 +129,8 @@ class CreateRoomFragment : Fragment() {
                             roomName = room.room.name,
                             roomPassword = room.room.password,
                             maxPrice = room.room.maxPrice.toString(),
-                            date = room.room.date?.format(dateFormatter).toString()
+                            date = room.room.date?.format(dateFormatter).toString(),
+                            roomId = room.room.id
                         )
                     findNavController().navigate(navAction)
                 }

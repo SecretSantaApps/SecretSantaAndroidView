@@ -48,6 +48,7 @@ class RoomDetailsUsersListAdapter(
         fun bind(user: UserInfo) {
             binding.apply {
                 userName.text = user.username
+                leaveUserButton.visibility = View.GONE
                 kickUserButton.visibility = if (isAdmin) View.VISIBLE else View.GONE
                 kickUserButton.setOnClickListener { onKickUserClick(user) }
                 if (user.userId == ownerId) {

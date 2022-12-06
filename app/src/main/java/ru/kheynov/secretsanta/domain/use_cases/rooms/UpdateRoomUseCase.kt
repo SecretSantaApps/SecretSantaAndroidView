@@ -11,9 +11,10 @@ class UpdateRoomUseCase @Inject constructor(
     private val roomsRepository: RoomsRepository,
 ) {
     suspend operator fun invoke(
+        roomId: String,
         room: RoomDTO.Update,
     ): Resource<Unit> {
         tokenRepository.fetchToken()
-        return roomsRepository.updateRoom(room)
+        return roomsRepository.updateRoom(roomId, room)
     }
 }

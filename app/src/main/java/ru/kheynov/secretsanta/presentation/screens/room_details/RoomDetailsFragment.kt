@@ -35,11 +35,9 @@ class RoomDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentRoomDetailsBinding.inflate(inflater, container, false)
-        usersListAdapter =
-            RoomDetailsUsersListAdapter(
-                onKickUserClick = ::onKickUserClick,
-                onUserLeaveClick = ::onUserLeaveClick
-            )
+        usersListAdapter = RoomDetailsUsersListAdapter(
+            onKickUserClick = ::onKickUserClick, onUserLeaveClick = ::onUserLeaveClick
+        )
         return binding.root
     }
 
@@ -53,7 +51,7 @@ class RoomDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setRoomName(args.roomName)
+        viewModel.setRoomId(args.roomId)
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
@@ -72,28 +70,23 @@ class RoomDetailsFragment : Fragment() {
         binding.apply {
             roomOwner.visibility =
                 if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomDate.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomMaxPrice.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomRecipient.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomPlayersTitle.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
+            roomDate.visibility = roomOwner.visibility
+            roomMaxPrice.visibility = roomOwner.visibility
+            roomRecipient.visibility = roomOwner.visibility
+            roomPlayersTitle.visibility = roomOwner.visibility
+            startStopGameButton.visibility = roomOwner.visibility
+            roomPassword.visibility = roomOwner.visibility
+            roomId.visibility = roomOwner.visibility
+            roomUsersList.visibility = roomOwner.visibility
             roomDetailsProgressBar.visibility =
                 if (state is RoomDetailsViewModel.State.Loading) View.VISIBLE else View.GONE
-            startStopGameButton.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomPassword.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
-            roomUsersList.visibility =
-                if (state is RoomDetailsViewModel.State.Loading) View.GONE else View.VISIBLE
 
             if (state is RoomDetailsViewModel.State.Loaded) {
                 usersListAdapter.updateList(state.roomInfo.users)
                 usersListAdapter.setOwnerId(state.userId)
                 state.roomInfo.apply {
                     roomDetailsName.text = roomName
+                    roomId.text = getString(R.string.room_id_placeholder, id)
                     users.find {
                         it.userId == ownerId
                     }?.username.also {

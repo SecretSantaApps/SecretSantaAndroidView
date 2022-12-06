@@ -5,7 +5,7 @@ import ru.kheynov.secretsanta.utils.Resource
 
 interface RoomsRepository {
     suspend fun createRoom(room: Create): Resource<Info>
-    suspend fun deleteRoom(room: Delete): Resource<Unit>
-    suspend fun updateRoom(room: Update): Resource<Unit>
-    suspend fun getRoomInfo(room: GetRoomInfo): Resource<Info>
+    suspend fun deleteRoom(roomId: String): Resource<Unit>
+    suspend fun updateRoom(roomId: String, room: Update): Resource<Unit>
+    suspend fun getRoomInfo(roomId: String): Resource<Info>
 }

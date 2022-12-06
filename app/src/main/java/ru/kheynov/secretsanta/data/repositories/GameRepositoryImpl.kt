@@ -20,9 +20,9 @@ import javax.inject.Singleton
 class GameRepositoryImpl @Inject constructor(
     private val gameAPI: GameAPI
 ) : GameRepository {
-    override suspend fun joinRoom(request: GameDTO.Join): Resource<Unit> {
+    override suspend fun joinRoom(roomId: String, password: String): Resource<Unit> {
         return try {
-            gameAPI.joinRoom(request)
+            gameAPI.joinRoom(roomId = roomId, password = password)
             Resource.Success(Unit)
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(
@@ -43,9 +43,9 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun leaveRoom(request: GameDTO.Leave): Resource<Unit> {
+    override suspend fun leaveRoom(roomId: String): Resource<Unit> {
         return try {
-            gameAPI.leaveRoom(request)
+            gameAPI.leaveRoom(roomId)
             Resource.Success(Unit)
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(
@@ -86,9 +86,9 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun startGame(request: GameDTO.Start): Resource<Unit> {
+    override suspend fun startGame(roomId: String): Resource<Unit> {
         return try {
-            gameAPI.startGame(request)
+            gameAPI.startGame(roomId)
             Resource.Success(Unit)
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
@@ -109,9 +109,9 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun stopGame(request: GameDTO.Stop): Resource<Unit> {
+    override suspend fun stopGame(roomId: String): Resource<Unit> {
         return try {
-            gameAPI.stopGame(request)
+            gameAPI.stopGame(roomId)
             Resource.Success(Unit)
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
@@ -132,9 +132,9 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGameInfo(request: GameDTO.GetRoomInfo): Resource<GameDTO.RoomInfo> {
+    override suspend fun getGameInfo(roomId: String): Resource<GameDTO.RoomInfo> {
         return try {
-            val res = gameAPI.getGameInfo(request.roomName)
+            val res = gameAPI.getGameInfo(roomId)
             Resource.Success(res)
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {

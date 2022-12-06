@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import ru.kheynov.secretsanta.domain.entities.RegisterUser
 import ru.kheynov.secretsanta.databinding.ActivityRegisterBinding
+import ru.kheynov.secretsanta.domain.entities.RegisterUser
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 
 @AndroidEntryPoint
@@ -44,13 +44,9 @@ class RegisterActivity : AppCompatActivity() {
                         if (state is RegisterActivityViewModel.State.Idle) registerUsernameInput
                             .setText(viewModel.username)
 
-                        registerButton.visibility =
-                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
-                            else View.GONE
+                        registerButton.visibility = registerUsernameInput.visibility
 
-                        registerTitleText.visibility =
-                            if (state == RegisterActivityViewModel.State.Idle) View.VISIBLE
-                            else View.GONE
+                        registerTitleText.visibility = registerUsernameInput.visibility
                     }
                 }
             }
@@ -63,9 +59,11 @@ class RegisterActivity : AppCompatActivity() {
     private fun handleActions(action: RegisterActivityViewModel.Action) {
         when (action) {
             RegisterActivityViewModel.Action.RouteToMain -> navigateToLoginScreen(this)
-            is RegisterActivityViewModel.Action.ShowError -> Toast.makeText(this,
+            is RegisterActivityViewModel.Action.ShowError -> Toast.makeText(
+                this,
                 "Error: ${action.error}",
-                Toast.LENGTH_SHORT).show()
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

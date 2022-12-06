@@ -32,6 +32,7 @@ class CreatedSuccessfullyFragment : Fragment() {
         binding.apply {
             roomName.text = getString(R.string.room_name_placeholder, args.roomName)
             roomPassword.text = getString(R.string.room_password_placeholder, args.roomPassword)
+            roomId.text = getString(R.string.room_id_placeholder, args.roomId)
             args.maxPrice.run {
                 if (contains("0") || contains("null")) {
                     roomMaxPrice.visibility = View.GONE

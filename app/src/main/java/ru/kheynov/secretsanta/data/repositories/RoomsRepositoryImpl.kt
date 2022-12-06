@@ -21,65 +21,73 @@ class RoomsRepositoryImpl @Inject constructor(
             val res = roomsAPI.createRoom(room)
             Resource.Success(res)
         } catch (e: HttpException) {
-            Resource.Failure(when (e.code()) {
-                400 -> UserNotExistsException()
-                409 -> RoomAlreadyExistsException()
-                else -> e
-            })
+            Resource.Failure(
+                when (e.code()) {
+                    400 -> UserNotExistsException()
+                    409 -> RoomAlreadyExistsException()
+                    else -> e
+                }
+            )
         } catch (e: Exception) {
 
             Resource.Failure(e)
         }
     }
 
-    override suspend fun deleteRoom(room: Delete): Resource<Unit> {
+    override suspend fun deleteRoom(roomId: String): Resource<Unit> {
         return try {
-            roomsAPI.deleteRoom(room)
+            roomsAPI.deleteRoom(roomId)
             Resource.Success(Unit)
         } catch (e: HttpException) {
-            Resource.Failure(when (e.code()) {
-                400 -> {
-                    if (e.message().contains("User")) UserNotExistsException()
-                    else RoomNotExistsException()
+            Resource.Failure(
+                when (e.code()) {
+                    400 -> {
+                        if (e.message().contains("User")) UserNotExistsException()
+                        else RoomNotExistsException()
+                    }
+                    else -> e
                 }
-                else -> e
-            })
+            )
         } catch (e: Exception) {
             Resource.Failure(e)
         }
     }
 
-    override suspend fun updateRoom(room: Update): Resource<Unit> {
+    override suspend fun updateRoom(roomId: String, room: Update): Resource<Unit> {
         return try {
-            roomsAPI.updateRoom(room)
+            roomsAPI.updateRoom(roomId, room)
             Resource.Success(Unit)
         } catch (e: HttpException) {
-            Resource.Failure(when (e.code()) {
-                400 -> {
-                    if (e.message().contains("User")) UserNotExistsException()
-                    else RoomNotExistsException()
+            Resource.Failure(
+                when (e.code()) {
+                    400 -> {
+                        if (e.message().contains("User")) UserNotExistsException()
+                        else RoomNotExistsException()
+                    }
+                    403 -> ForbiddenException()
+                    else -> e
                 }
-                403 -> ForbiddenException()
-                else -> e
-            })
+            )
         } catch (e: Exception) {
             Resource.Failure(e)
         }
     }
 
-    override suspend fun getRoomInfo(room: GetRoomInfo): Resource<Info> {
+    override suspend fun getRoomInfo(roomId: String): Resource<Info> {
         return try {
-            val res = roomsAPI.getRoomInfo(room)
+            val res = roomsAPI.getRoomInfo(roomId)
             Resource.Success(res)
         } catch (e: HttpException) {
-            Resource.Failure(when (e.code()) {
-                400 -> {
-                    if (e.message().contains("User")) UserNotExistsException()
-                    else RoomNotExistsException()
+            Resource.Failure(
+                when (e.code()) {
+                    400 -> {
+                        if (e.message().contains("User")) UserNotExistsException()
+                        else RoomNotExistsException()
+                    }
+                    403 -> ForbiddenException()
+                    else -> e
                 }
-                403 -> ForbiddenException()
-                else -> e
-            })
+            )
         } catch (e: Exception) {
             Resource.Failure(e)
         }

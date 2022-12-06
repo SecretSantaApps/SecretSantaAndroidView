@@ -13,7 +13,7 @@
     <string name="edit_button_content_description">edit button</string>
     <string name="also_you_can">Also you can</string>
     <string name="delete_your_account"> delete your profile</string>
-    <string name="new_username_hint">New username</string>
+    <string name="new_room_name_hint">New room name</string>
     <string name="edit_username_title">Edit profile</string>
     <string name="save">Save</string>
     <string name="logout_dialog_title">Quit the app</string>
@@ -41,6 +41,7 @@
     <string name="deadline_placeholder">Until: %1$s</string>
     <string name="room_players_title">Room Players</string>
     <string name="room_owner_placeholder">Room owner: %1$s</string>
+    <string name="room_id_placeholder">Room ID: %1$s</string>
     <string name="room_date_placeholder">Deadline: %1$s</string>
     <string name="room_recipient_placeholder">Your gift recipient: %1$s</string>
     <string name="invite_user">Invite user</string>
@@ -49,4 +50,10 @@
     <string name="not_enough_players">Not enough players</string>
     <string name="block_button">block button</string>
     <string name="leave_button">leave button</string>
+    <string name="join_room_button">join room button</string>
+    <string name="join_room_title">Join room</string>
+    <string name="room_id_hint">Room ID</string>
+    <string name="room_password_hint">Room password</string>
+    <string name="join_room_button_hint">Join room</string>
+    <string name="new_username_hint">New username</string>
 </resources>

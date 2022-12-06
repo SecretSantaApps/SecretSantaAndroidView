@@ -50,11 +50,12 @@ class RoomsListViewModel @Inject constructor(
                 is Resource.Success -> {
                     _rooms.value = result.result.map {
                         RoomItem(
-                            it.name,
-                            it.membersCount.toString(),
-                            it.gameStarted.toString(),
-                            it.date.toString(),
-                            0
+                            roomId = it.id,
+                            roomName = it.name,
+                            membersCount = it.membersCount.toString(),
+                            gameState = it.gameStarted.toString(),
+                            date = it.date.toString(),
+                            gameStateColor = 0
                         )
                     }
                     _state.value = State.Idle
@@ -79,5 +80,4 @@ class RoomsListViewModel @Inject constructor(
             }
         }
     }
-
 }

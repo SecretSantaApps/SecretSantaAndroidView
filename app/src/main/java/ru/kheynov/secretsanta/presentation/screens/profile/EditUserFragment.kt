@@ -58,9 +58,7 @@ class EditUserFragment : Fragment() {
             userEditTitle.visibility =
                 if (state is State.Loaded) View.VISIBLE
                 else View.GONE
-            editUserSaveButton.visibility =
-                if (state is State.Loaded) View.VISIBLE
-                else View.GONE
+            editUserSaveButton.visibility = userEditTitle.visibility
             editUsernameInput.apply {
                 if (state is State.Loaded) {
                     visibility =

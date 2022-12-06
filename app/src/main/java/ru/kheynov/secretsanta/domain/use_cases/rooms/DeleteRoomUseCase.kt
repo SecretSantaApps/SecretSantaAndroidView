@@ -1,6 +1,5 @@
 package ru.kheynov.secretsanta.domain.use_cases.rooms
 
-import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.domain.repositories.RoomsRepository
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
@@ -11,9 +10,9 @@ class DeleteRoomUseCase @Inject constructor(
     private val roomsRepository: RoomsRepository,
 ) {
     suspend operator fun invoke(
-        room: RoomDTO.Delete,
+        roomId: String,
     ): Resource<Unit> {
         tokenRepository.fetchToken()
-        return roomsRepository.deleteRoom(room)
+        return roomsRepository.deleteRoom(roomId)
     }
 }

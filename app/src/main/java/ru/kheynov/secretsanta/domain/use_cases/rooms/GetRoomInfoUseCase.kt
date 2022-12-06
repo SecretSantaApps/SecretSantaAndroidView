@@ -11,9 +11,9 @@ class GetRoomInfoUseCase @Inject constructor(
     private val roomsRepository: RoomsRepository,
 ) {
     suspend operator fun invoke(
-        room: RoomDTO.GetRoomInfo,
+        roomId: String,
     ): Resource<RoomDTO.Info> {
         tokenRepository.fetchToken()
-        return roomsRepository.getRoomInfo(room)
+        return roomsRepository.getRoomInfo(roomId)
     }
 }

@@ -49,8 +49,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-//    private const val BASE_URL = "https://santa.s.kheynov.ru/api/v1/"
-    private const val BASE_URL = "http://192.168.1.24:8080/api/v1/"
+    private const val BASE_URL = "https://santa.s.kheynov.ru/api/v1/"
+//    private const val BASE_URL = "http://192.168.1.24:8080/api/v1/"
 
     private val json = Json {
         ignoreUnknownKeys = true

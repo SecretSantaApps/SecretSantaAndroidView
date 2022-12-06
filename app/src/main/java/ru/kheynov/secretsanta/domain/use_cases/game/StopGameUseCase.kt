@@ -1,6 +1,5 @@
 package ru.kheynov.secretsanta.domain.use_cases.game
 
-import ru.kheynov.secretsanta.domain.entities.GameDTO
 import ru.kheynov.secretsanta.domain.repositories.GameRepository
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.TokenRepository
@@ -11,9 +10,9 @@ class StopGameUseCase @Inject constructor(
     private val gameRepository: GameRepository,
 ) {
     suspend operator fun invoke(
-        request: GameDTO.Stop,
+        roomId: String,
     ): Resource<Unit> {
         tokenRepository.fetchToken()
-        return gameRepository.stopGame(request)
+        return gameRepository.stopGame(roomId)
     }
 }

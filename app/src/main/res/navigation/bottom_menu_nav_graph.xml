@@ -14,7 +14,7 @@
             android:id="@+id/action_roomsListFragment_to_roomDetailsFragment"
             app:destination="@id/roomDetails">
             <argument
-                android:name="roomName"
+                android:name="roomId"
                 app:argType="string" />
         </action>
 
@@ -36,6 +36,9 @@
             app:destination="@id/createdSuccessfully">
             <argument
                 android:name="roomName"
+                app:argType="string" />
+            <argument
+                android:name="roomId"
                 app:argType="string" />
             <argument
                 android:name="roomPassword"
@@ -64,6 +67,9 @@
             android:name="roomName"
             app:argType="string" />
         <argument
+            android:name="roomId"
+            app:argType="string" />
+        <argument
             android:name="roomPassword"
             app:argType="string" />
         <argument
@@ -80,8 +86,14 @@
         android:label="Room details"
         tools:layout="@layout/fragment_room_details">
         <argument
-            android:name="roomName"
+            android:name="roomId"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/joinRoom"
+        android:name="ru.kheynov.secretsanta.presentation.screens.join_room.JoinRoomFragment"
+        android:label="Join room"
+        tools:layout="@layout/fragment_join_room" />
 
 </navigation>

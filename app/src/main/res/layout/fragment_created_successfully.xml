@@ -48,6 +48,21 @@
         app:layout_constraintTop_toBottomOf="@+id/check_circle" />
 
     <TextView
+        android:id="@+id/room_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/open_sans"
+        android:text="@string/room_id_placeholder"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimary"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/room_name" />
+
+    <TextView
         android:id="@+id/room_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +75,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/room_name" />
+        app:layout_constraintTop_toBottomOf="@+id/room_id" />
 
     <TextView
         android:id="@+id/room_max_price"

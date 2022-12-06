@@ -6,7 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".presentation.screens.rooms_list.RoomsListFragment">
 
-    <!--    title-->
+    <ImageButton
+        android:id="@+id/join_room_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/join_room_button"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_baseline_login_24"
+        app:layout_constraintBottom_toBottomOf="@+id/rooms_list_title"
+        app:layout_constraintEnd_toStartOf="@+id/rooms_list_title"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/rooms_list_title" />
+
     <TextView
         android:id="@+id/rooms_list_title"
         android:layout_width="wrap_content"
@@ -15,7 +28,6 @@
         android:fontFamily="@font/open_sans_bold"
         android:text="@string/rooms_list_title"
         android:textColor="@color/colorPrimary"
-
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -1,7 +1,11 @@
 package ru.kheynov.secretsanta.presentation.screens.profile
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.R
@@ -20,6 +25,7 @@ import ru.kheynov.secretsanta.databinding.FragmentProfileBinding
 import ru.kheynov.secretsanta.presentation.screens.profile.ProfileFragmentViewModel.Action
 import ru.kheynov.secretsanta.presentation.screens.profile.ProfileFragmentViewModel.State
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -27,6 +33,9 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
 
     private val viewModel by viewModels<ProfileFragmentViewModel>()
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +56,23 @@ class ProfileFragment : Fragment() {
             logoutButton.setOnClickListener { showLogoutAlertDialog(view) }
             nicknameText.setOnClickListener { viewModel.editUsername() }
             deleteProfileButton.setOnClickListener { showDeleteAccountDialog(view) }
+            getTokenButton.setOnClickListener { getToken() }
+        }
+    }
+
+    private fun getToken() {
+        firebaseAuth.currentUser?.getIdToken(false)?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result.token.toString()
+                Log.i("TOKEN", token)
+                val clipboard = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as
+                        ClipboardManager
+
+                val clip: ClipData = ClipData.newPlainText(null, "```${token}```")
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(activity, "Token copied to clipboard!", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 
@@ -64,8 +90,10 @@ class ProfileFragment : Fragment() {
             else View.GONE
             deleteProfileLayout.visibility = if (state is State.Loaded) View.VISIBLE
             else View.GONE
-            avatarImage.visibility = if (state is State.Loaded) View.VISIBLE
-            else View.GONE
+
+            avatarImage.visibility = deleteProfileLayout.visibility
+            logoutButton.visibility = deleteProfileLayout.visibility
+
             nicknameText.apply {
                 if (state is State.Loaded) {
                     visibility = View.VISIBLE
@@ -74,8 +102,6 @@ class ProfileFragment : Fragment() {
                     visibility = View.GONE
                 }
             }
-            logoutButton.visibility = if (state is State.Loaded) View.VISIBLE
-            else View.GONE
         }
     }
 
@@ -99,13 +125,15 @@ class ProfileFragment : Fragment() {
             setTitle(getString(R.string.logout_dialog_title))
             setMessage(getString(R.string.logout_dialog_confirmation))
             setPositiveButton(
-                getString(R.string.dialog_leave_button)) { dialog, _ ->
+                getString(R.string.dialog_leave_button)
+            ) { dialog, _ ->
                 dialog.dismiss()
                 viewModel.logout()
             }
 
             setNegativeButton(
-                getString(R.string.cancel_button)) { dialog, _ ->
+                getString(R.string.cancel_button)
+            ) { dialog, _ ->
                 dialog.dismiss()
             }
             show()
@@ -118,13 +146,15 @@ class ProfileFragment : Fragment() {
             setTitle(getString(R.string.delete_profile_dialog_title))
             setMessage(getString(R.string.delete_profile_dialog_confirmation))
             setPositiveButton(
-                "Удалить") { dialog, _ ->
+                "Удалить"
+            ) { dialog, _ ->
                 dialog.dismiss()
                 viewModel.deleteAccount()
             }
 
             setNegativeButton(
-                getString(R.string.cancel_button)) { dialog, _ ->
+                getString(R.string.cancel_button)
+            ) { dialog, _ ->
                 dialog.dismiss()
             }
             show()

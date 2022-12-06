@@ -8,20 +8,20 @@ import ru.kheynov.secretsanta.domain.entities.GameDTO.*
 
 interface GameAPI {
     @POST("game/join")
-    suspend fun joinRoom(@Body request: Join)
+    suspend fun joinRoom(@Query("id") roomId: String, @Query("pass") password: String)
 
     @POST("game/leave")
-    suspend fun leaveRoom(@Body request: Leave)
+    suspend fun leaveRoom(@Query("id") roomId: String)
 
     @POST("game/kick")
     suspend fun kickUser(@Body request: KickUser)
 
     @POST("game/start")
-    suspend fun startGame(@Body request: Start)
+    suspend fun startGame(@Query("id") roomId: String)
 
     @POST("game/stop")
-    suspend fun stopGame(@Body request: Stop)
+    suspend fun stopGame(@Query("id") roomId: String)
 
     @GET("game/info")
-    suspend fun getGameInfo(@Query("roomName") roomName: String): RoomInfo
+    suspend fun getGameInfo(@Query("id") roomId: String): RoomInfo
 }
