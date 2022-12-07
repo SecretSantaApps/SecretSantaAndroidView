@@ -56,4 +56,6 @@
     <string name="room_password_hint">Room password</string>
     <string name="join_room_button_hint">Join room</string>
     <string name="new_username_hint">New username</string>
+    <string name="globe_button">rooms list</string>
+    <string name="create_room_button">create room</string>
 </resources>

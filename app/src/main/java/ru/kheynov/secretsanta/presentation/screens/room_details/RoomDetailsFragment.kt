@@ -10,8 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,8 +24,6 @@ class RoomDetailsFragment : Fragment() {
     private val viewModel by viewModels<RoomDetailsViewModel>()
 
     private lateinit var binding: FragmentRoomDetailsBinding
-
-    private val args: RoomDetailsFragmentArgs by navArgs()
 
     private lateinit var usersListAdapter: RoomDetailsUsersListAdapter
 
@@ -51,7 +47,7 @@ class RoomDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.setRoomId(args.roomId)
+        arguments?.getString("roomId")?.also { viewModel.setRoomId(it) }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
@@ -161,7 +157,7 @@ class RoomDetailsFragment : Fragment() {
                     }
                 }
             }
-            RoomDetailsViewModel.Action.NavigateBack -> findNavController().popBackStack()
+            RoomDetailsViewModel.Action.NavigateBack -> activity?.supportFragmentManager?.popBackStack()
         }
     }
 

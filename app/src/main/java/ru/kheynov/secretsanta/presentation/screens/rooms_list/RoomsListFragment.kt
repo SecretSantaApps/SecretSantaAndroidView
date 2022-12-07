@@ -12,13 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.FragmentRoomsListBinding
 import ru.kheynov.secretsanta.domain.entities.RoomItem
+import ru.kheynov.secretsanta.presentation.screens.join_room.JoinRoomFragment
+import ru.kheynov.secretsanta.presentation.screens.room_details.RoomDetailsFragment
 import ru.kheynov.secretsanta.utils.dateFormatterWithoutYear
 import ru.kheynov.secretsanta.utils.navigateToLoginScreen
 import java.time.LocalDate
@@ -40,12 +41,16 @@ class RoomsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         roomsListAdapter = RoomsListAdapter(::onRoomClick)
         binding.apply {
             roomsList.adapter = roomsListAdapter
             roomsList.layoutManager = LinearLayoutManager(context)
             joinRoomButton.setOnClickListener {
-                findNavController().navigate(R.id.joinRoom)
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, JoinRoomFragment())
+                    ?.addToBackStack("")
+                    ?.commit()
             }
         }
         lifecycleScope.launch {
@@ -91,10 +96,15 @@ class RoomsListFragment : Fragment() {
     }
 
     private fun onRoomClick(room: RoomItem) {
-        val navAction = RoomsListFragmentDirections.actionRoomsListFragmentToRoomDetailsFragment(
-            roomId = room.roomId
+        val fragment = RoomDetailsFragment()
+        val args = Bundle().apply {
+            putString("roomId", room.roomId)
+        }
+        fragment.arguments = args
+        activity?.supportFragmentManager?.beginTransaction()
+            ?.replace(R.id.fragment_container, fragment)?.addToBackStack("")?.commit() ?: Log.i(
+            tag, "Unable to navigate"
         )
-        findNavController().navigate(navAction)
     }
 
     override fun onResume() {
@@ -118,4 +128,5 @@ class RoomsListFragment : Fragment() {
             }
         }
     }
+
 }

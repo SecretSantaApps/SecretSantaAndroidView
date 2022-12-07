@@ -13,12 +13,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.FragmentCreateRoomBinding
 import ru.kheynov.secretsanta.domain.entities.RoomDTO
+import ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfullyFragment
 import ru.kheynov.secretsanta.utils.dateFormatter
 import java.time.LocalDate
 
@@ -39,6 +39,7 @@ class CreateRoomFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
@@ -124,15 +125,21 @@ class CreateRoomFragment : Fragment() {
             CreateRoomFragmentViewModel.Action.ShowSuccess -> {
                 if (viewModel.state.value is CreateRoomFragmentViewModel.State.Loaded) {
                     val room = viewModel.state.value as CreateRoomFragmentViewModel.State.Loaded
-                    val navAction =
-                        CreateRoomFragmentDirections.actionCreateRoomFragmentToCreatedSuccessfullyFragment(
-                            roomName = room.room.name,
-                            roomPassword = room.room.password,
-                            maxPrice = room.room.maxPrice.toString(),
-                            date = room.room.date?.format(dateFormatter).toString(),
-                            roomId = room.room.id
+                    val fragment = CreatedSuccessfullyFragment()
+                    val args = Bundle().apply {
+                        putString("roomName", room.room.name)
+                        putString("password", room.room.password)
+                        putString("maxPrice", room.room.maxPrice.toString())
+                        putString("date", room.room.date?.format(dateFormatter).toString())
+                        putString("roomId", room.room.id)
+                    }
+                    fragment.arguments = args
+                    activity?.supportFragmentManager?.beginTransaction()
+                        ?.replace(R.id.fragment_container, fragment)?.commit()
+                        ?: Log.i(
+                            "CreateRoomFragment",
+                            "Unable to navigate"
                         )
-                    findNavController().navigate(navAction)
                 }
             }
         }

@@ -45,9 +45,12 @@ class ProfileFragmentViewModel @Inject constructor(
             _state.value = State.Loading
             when (val res = useCases.getSelfInfoUseCase()) {
                 is Resource.Failure -> _actions.send(Action.ShowError)
-                is Resource.Success -> username = res.result.username
+                is Resource.Success -> {
+                    username = res.result.username
+                    _state.value = State.Loaded(username)
+                }
             }
-            _state.value = State.Loaded(username)
+
         }
     }
 

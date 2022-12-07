@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.databinding.FragmentJoinRoomBinding
@@ -55,7 +54,7 @@ class JoinRoomFragment : Fragment() {
 
     private fun handleAction(action: JoinRoomViewModel.Action) {
         when (action) {
-            JoinRoomViewModel.Action.NavigateBack -> findNavController().popBackStack()
+            JoinRoomViewModel.Action.NavigateBack -> activity?.supportFragmentManager?.popBackStack()
             is JoinRoomViewModel.Action.ShowError -> {
                 Log.e("JoinRoomFragment", action.error)
                 Toast.makeText(context, action.error, Toast.LENGTH_SHORT).show()

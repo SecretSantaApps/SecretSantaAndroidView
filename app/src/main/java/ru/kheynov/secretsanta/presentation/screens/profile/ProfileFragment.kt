@@ -15,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,13 +64,12 @@ class ProfileFragment : Fragment() {
             if (task.isSuccessful) {
                 val token = task.result.token.toString()
                 Log.i("TOKEN", token)
-                val clipboard = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as
-                        ClipboardManager
+                val clipboard =
+                    activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
                 val clip: ClipData = ClipData.newPlainText(null, "```${token}```")
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(activity, "Token copied to clipboard!", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(activity, "Token copied to clipboard!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -93,6 +91,7 @@ class ProfileFragment : Fragment() {
 
             avatarImage.visibility = deleteProfileLayout.visibility
             logoutButton.visibility = deleteProfileLayout.visibility
+            getTokenButton.visibility = deleteProfileLayout.visibility
 
             nicknameText.apply {
                 if (state is State.Loaded) {
@@ -114,7 +113,9 @@ class ProfileFragment : Fragment() {
             }
             Action.ShowError -> Toast.makeText(context!!, "Error", Toast.LENGTH_SHORT).show()
             Action.NavigateToEditUser -> {
-                findNavController().navigate(R.id.editUser)
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container, EditUserFragment())?.addToBackStack("")
+                    ?.commit()
             }
         }
     }
