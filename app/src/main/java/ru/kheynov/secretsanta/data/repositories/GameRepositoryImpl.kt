@@ -25,20 +25,21 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.joinRoom(roomId = roomId, password = password)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException) Resource.Failure(
-                when (e.code()) {
-                    400 -> {
-                        if (e.message().contains("User")) UserNotExistsException()
-                        else RoomNotExistsException()
+            if (e is HttpException) Resource.Failure(e.response()?.errorBody()?.string().toString()
+                .let { message ->
+                    when (e.code()) {
+                        400 -> {
+                            if (message.contains("User")) UserNotExistsException()
+                            else RoomNotExistsException()
+                        }
+                        403 -> ForbiddenException()
+                        409 -> {
+                            if (message.contains("Game")) GameAlreadyStartedException()
+                            else UserAlreadyInRoomException()
+                        }
+                        else -> e
                     }
-                    403 -> ForbiddenException()
-                    409 -> {
-                        if (e.message().contains("Game")) GameAlreadyStartedException()
-                        else UserAlreadyInRoomException()
-                    }
-                    else -> e
-                }
-            )
+                })
             else Resource.Failure(e)
         }
     }
@@ -48,17 +49,18 @@ class GameRepositoryImpl @Inject constructor(
             gameAPI.leaveRoom(roomId)
             Resource.Success(Unit)
         } catch (e: Exception) {
-            if (e is HttpException) Resource.Failure(
-                when (e.code()) {
-                    400 -> {
-                        if (e.message().contains("User")) UserNotExistsException()
-                        else RoomNotExistsException()
+            if (e is HttpException) Resource.Failure(e.response()?.errorBody()?.string().toString()
+                .let { message ->
+                    when (e.code()) {
+                        400 -> {
+                            if (message.contains("User")) UserNotExistsException()
+                            else RoomNotExistsException()
+                        }
+                        403 -> UserNotInTheRoomException()
+                        409 -> GameAlreadyStartedException()
+                        else -> e
                     }
-                    403 -> UserNotInTheRoomException()
-                    409 -> GameAlreadyStartedException()
-                    else -> e
-                }
-            )
+                })
             else Resource.Failure(e)
         }
     }
@@ -70,7 +72,7 @@ class GameRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
                 400 -> {
-                    with(e.message()) {
+                    with(e.response()?.errorBody()?.string().toString()) {
                         when {
                             contains("User") -> if (contains("exists")) UserNotExistsException() else UserNotInTheRoomException()
                             contains("Room") -> RoomNotExistsException()
@@ -93,7 +95,7 @@ class GameRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
                 400 -> {
-                    with(e.message()) {
+                    with(e.response()?.errorBody()?.string().toString()) {
                         when {
                             contains("User") -> UserNotExistsException()
                             contains("Room") -> RoomNotExistsException()
@@ -116,7 +118,7 @@ class GameRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
                 400 -> {
-                    with(e.message()) {
+                    with(e.response()?.errorBody()?.string().toString()) {
                         when {
                             contains("User") -> UserNotExistsException()
                             contains("Room") -> RoomNotExistsException()
@@ -139,7 +141,7 @@ class GameRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             if (e is HttpException) Resource.Failure(when (e.code()) {
                 400 -> {
-                    with(e.message()) {
+                    with(e.response()?.errorBody()?.string().toString()) {
                         when {
                             contains("User") -> UserNotExistsException()
                             contains("Room") -> RoomNotExistsException()

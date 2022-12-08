@@ -9,7 +9,7 @@ sealed interface GameDTO {
     @Serializable
     data class KickUser(
         @SerialName("user_id") val userId: String,
-        @SerialName("room_name") val roomName: String,
+        @SerialName("room_id") val roomId: String,
     ) : GameDTO
 
     @Serializable

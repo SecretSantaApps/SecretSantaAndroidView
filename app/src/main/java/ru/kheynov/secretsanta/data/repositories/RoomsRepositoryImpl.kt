@@ -42,7 +42,9 @@ class RoomsRepositoryImpl @Inject constructor(
             Resource.Failure(
                 when (e.code()) {
                     400 -> {
-                        if (e.message().contains("User")) UserNotExistsException()
+                        if (e.response()?.errorBody()?.toString()
+                                ?.contains("User") == true
+                        ) UserNotExistsException()
                         else RoomNotExistsException()
                     }
                     else -> e
@@ -61,7 +63,9 @@ class RoomsRepositoryImpl @Inject constructor(
             Resource.Failure(
                 when (e.code()) {
                     400 -> {
-                        if (e.message().contains("User")) UserNotExistsException()
+                        if (e.response()?.errorBody()?.toString()
+                                ?.contains("User") == true
+                        ) UserNotExistsException()
                         else RoomNotExistsException()
                     }
                     403 -> ForbiddenException()
@@ -81,7 +85,9 @@ class RoomsRepositoryImpl @Inject constructor(
             Resource.Failure(
                 when (e.code()) {
                     400 -> {
-                        if (e.message().contains("User")) UserNotExistsException()
+                        if (e.response()?.errorBody()?.toString()
+                                ?.contains("User") == true
+                        ) UserNotExistsException()
                         else RoomNotExistsException()
                     }
                     403 -> ForbiddenException()
