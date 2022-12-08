@@ -13,6 +13,6 @@ class StartGameUseCase @Inject constructor(
         roomId: String,
     ): Resource<Unit> {
         tokenRepository.fetchToken()
-        return gameRepository.startGame(roomId)
+        return gameRepository.startGame(roomId = roomId)
     }
 }

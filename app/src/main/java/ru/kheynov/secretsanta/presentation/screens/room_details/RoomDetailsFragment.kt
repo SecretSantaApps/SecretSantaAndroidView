@@ -1,5 +1,8 @@
 package ru.kheynov.secretsanta.presentation.screens.room_details
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +20,7 @@ import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.FragmentRoomDetailsBinding
 import ru.kheynov.secretsanta.domain.entities.UserInfo
 import ru.kheynov.secretsanta.utils.dateFormatterWithoutYear
+import ru.kheynov.secretsanta.utils.generateInviteLink
 
 @AndroidEntryPoint
 class RoomDetailsFragment : Fragment() {
@@ -60,6 +64,26 @@ class RoomDetailsFragment : Fragment() {
         }
         binding.roomUsersList.adapter = usersListAdapter
         binding.roomUsersList.layoutManager = LinearLayoutManager(context)
+        binding.roomDetailsCopyLinkButton.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.state.collect { state ->
+                    if (state is RoomDetailsViewModel.State.Loaded) {
+                        val clipboard =
+                            activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val roomInfo = state.roomInfo
+                        val clip: ClipData = ClipData.newPlainText(
+                            "link", generateInviteLink(
+                                roomId = roomInfo.id,
+                                password = roomInfo.password.toString()
+                            )
+                        )
+                        clipboard.setPrimaryClip(clip)
+                        Toast.makeText(activity, "Copied!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        }
     }
 
     private fun updateUI(state: RoomDetailsViewModel.State) {
@@ -74,6 +98,7 @@ class RoomDetailsFragment : Fragment() {
             roomPassword.visibility = roomOwner.visibility
             roomId.visibility = roomOwner.visibility
             roomUsersList.visibility = roomOwner.visibility
+            roomDetailsCopyLinkButton.visibility = roomOwner.visibility
             roomDetailsProgressBar.visibility =
                 if (state is RoomDetailsViewModel.State.Loading) View.VISIBLE else View.GONE
 
@@ -93,7 +118,7 @@ class RoomDetailsFragment : Fragment() {
                             roomDate.visibility = View.GONE
                         } else {
                             roomDate.visibility = View.VISIBLE
-                            roomDate.text = getString(R.string.room_date_placeholder, it)
+                            roomDate.text = getString(R.string.room_deadline_placeholder, it)
                         }
                     }
                     max_price.also {
@@ -127,9 +152,11 @@ class RoomDetailsFragment : Fragment() {
                             roomPassword.visibility = View.GONE
                             startStopGameButton.visibility = View.INVISIBLE
                             startStopGameButton.isEnabled = false
+                            roomDetailsCopyLinkButton.visibility = View.GONE
                         } else {
                             roomPassword.visibility = View.VISIBLE
                             startStopGameButton.visibility = View.VISIBLE
+                            roomDetailsCopyLinkButton.visibility = View.VISIBLE
                             startStopGameButton.isEnabled = true
                             roomPassword.text = getString(R.string.room_password_placeholder, it)
                             usersListAdapter.enableBlocking()

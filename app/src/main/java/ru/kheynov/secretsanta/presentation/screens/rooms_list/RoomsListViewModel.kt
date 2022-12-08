@@ -11,9 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import ru.kheynov.secretsanta.domain.entities.RoomItem
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.SantaException
 import ru.kheynov.secretsanta.utils.UserNotExistsException
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ class RoomsListViewModel @Inject constructor(
     sealed interface State {
         object Loading : State
         object Idle : State
+        data class Error(val exception: Exception) : State
     }
 
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
@@ -46,9 +49,9 @@ class RoomsListViewModel @Inject constructor(
     fun loadRooms() {
         viewModelScope.launch {
             _state.value = State.Loading
-            when (val result = useCases.getRoomsListUseCase()) {
+            when (val res = useCases.getRoomsListUseCase()) {
                 is Resource.Success -> {
-                    _rooms.value = result.result.map {
+                    _rooms.value = res.result.map {
                         RoomItem(
                             roomId = it.id,
                             roomName = it.name,
@@ -61,7 +64,7 @@ class RoomsListViewModel @Inject constructor(
                     _state.value = State.Idle
                 }
                 is Resource.Failure -> {
-                    when (result.exception) {
+                    when (res.exception) {
                         is CancellationException -> {
                             Log.d(TAG, "loadRooms: CancellationException")
                         }
@@ -69,11 +72,15 @@ class RoomsListViewModel @Inject constructor(
                             _actions.send(Action.RouteToLogin)
                         }
                         else -> {
-                            _actions.send(
-                                Action.ShowError(
-                                    result.exception.message ?: "Unknown error"
+                            if (res.exception is SantaException || res.exception is HttpException) {
+                                _state.value = State.Error(res.exception)
+                            } else {
+                                _actions.send(
+                                    Action.ShowError(
+                                        res.exception.message ?: "Unknown error"
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }

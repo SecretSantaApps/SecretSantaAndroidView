@@ -1,6 +1,5 @@
 package ru.kheynov.secretsanta.presentation.screens.register_screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -11,12 +10,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import ru.kheynov.secretsanta.domain.entities.RegisterUser
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.SantaException
 import javax.inject.Inject
-
-private const val TAG = "RegisterActivityViewModel"
 
 @HiltViewModel
 class RegisterActivityViewModel @Inject constructor(
@@ -30,6 +29,7 @@ class RegisterActivityViewModel @Inject constructor(
     sealed interface State {
         object Idle : State
         object Loading : State
+        data class Error(val error: Exception) : State
     }
 
     val username = firebaseAuth.currentUser?.displayName ?: firebaseAuth.currentUser?.email
@@ -47,8 +47,12 @@ class RegisterActivityViewModel @Inject constructor(
             _state.value = State.Loading
             when (val res = useCases.registerUserUseCase(user)) {
                 is Resource.Failure -> {
-                    _actions.send(Action.ShowError(res.exception.message.toString()))
-                    Log.e(TAG, "Something went wrong", res.exception)
+                    if (res.exception is SantaException || res.exception is HttpException) {
+                        _state.value = State.Error(res.exception)
+                    } else {
+                        _state.value = State.Idle
+                        _actions.send(Action.ShowError(res.exception.message.toString()))
+                    }
                 }
                 is Resource.Success -> {
                     _actions.send(Action.RouteToMain)

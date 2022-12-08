@@ -14,3 +14,6 @@ fun navigateToLoginScreen(context: Context) {
 val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
 val dateFormatterWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM")
+
+fun generateInviteLink(roomId: String, password: String): String =
+    "https://santa.kheynov.ru/join?roomId=$roomId&pass=$password"

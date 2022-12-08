@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.SantaException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,12 +22,13 @@ class ProfileFragmentViewModel @Inject constructor(
     sealed interface State {
         object Loading : State
         data class Loaded(val name: String) : State
+        data class Error(val error: Exception) : State
     }
 
     sealed interface Action {
         object NavigateToLoginScreen : Action
-        object ShowError : Action
         object NavigateToEditUser : Action
+        data class ShowError(val error: String) : Action
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -44,13 +47,18 @@ class ProfileFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = State.Loading
             when (val res = useCases.getSelfInfoUseCase()) {
-                is Resource.Failure -> _actions.send(Action.ShowError)
+                is Resource.Failure -> {
+                    if (res.exception is SantaException || res.exception is HttpException) {
+                        _state.value = State.Error(res.exception)
+                    } else {
+                        _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
+                    }
+                }
                 is Resource.Success -> {
                     username = res.result.username
                     _state.value = State.Loaded(username)
                 }
             }
-
         }
     }
 

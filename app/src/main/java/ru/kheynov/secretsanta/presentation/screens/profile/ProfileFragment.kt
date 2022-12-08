@@ -111,7 +111,12 @@ class ProfileFragment : Fragment() {
                     navigateToLoginScreen(context!!)
                 }
             }
-            Action.ShowError -> Toast.makeText(context!!, "Error", Toast.LENGTH_SHORT).show()
+            is Action.ShowError -> Toast.makeText(
+                context!!,
+                "Error: ${action.error}",
+                Toast.LENGTH_SHORT
+            )
+                .show()
             Action.NavigateToEditUser -> {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragment_container, EditUserFragment())?.addToBackStack("")
@@ -147,7 +152,7 @@ class ProfileFragment : Fragment() {
             setTitle(getString(R.string.delete_profile_dialog_title))
             setMessage(getString(R.string.delete_profile_dialog_confirmation))
             setPositiveButton(
-                "Удалить"
+                getString(R.string.delete)
             ) { dialog, _ ->
                 dialog.dismiss()
                 viewModel.deleteAccount()

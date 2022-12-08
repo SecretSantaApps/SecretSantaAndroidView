@@ -52,17 +52,14 @@ class EditUserFragment : Fragment() {
 
     private fun updateUI(state: State) {
         binding.apply {
-            editUserProgressBar.visibility =
-                if (state == State.Loading) View.VISIBLE
-                else View.GONE
-            userEditTitle.visibility =
-                if (state is State.Loaded) View.VISIBLE
-                else View.GONE
+            editUserProgressBar.visibility = if (state == State.Loading) View.VISIBLE
+            else View.GONE
+            userEditTitle.visibility = if (state is State.Loaded) View.VISIBLE
+            else View.GONE
             editUserSaveButton.visibility = userEditTitle.visibility
             editUsernameInput.apply {
                 if (state is State.Loaded) {
-                    visibility =
-                        View.VISIBLE
+                    visibility = View.VISIBLE
                     setText(state.username)
                 } else {
                     visibility = View.GONE
@@ -74,7 +71,9 @@ class EditUserFragment : Fragment() {
     private fun handleAction(action: Action) {
         when (action) {
             Action.NavigateBack -> activity?.supportFragmentManager?.popBackStack()
-            Action.ShowError -> Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
+            is Action.ShowError -> Toast.makeText(
+                context, "Error: ${action.error}", Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

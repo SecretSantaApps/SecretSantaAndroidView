@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.domain.use_cases.game.GameUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.SantaException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +22,7 @@ class JoinRoomViewModel @Inject constructor(
     sealed interface State {
         object Loading : State
         object Idle : State
+        data class Error(val exception: SantaException) : State
     }
 
     sealed interface Action {
@@ -47,10 +49,14 @@ class JoinRoomViewModel @Inject constructor(
                     _actions.send(Action.NavigateBack)
                 }
                 is Resource.Failure -> {
-                    _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
+                    if (res.exception is SantaException) {
+                        _state.value = State.Error(res.exception)
+                    } else {
+                        _state.value = State.Idle
+                        _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
+                    }
                 }
             }
-            _state.value = State.Idle
         }
     }
 }

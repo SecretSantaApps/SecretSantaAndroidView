@@ -1,6 +1,5 @@
 package ru.kheynov.secretsanta.presentation.screens.create_room
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,12 +12,9 @@ import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
 import ru.kheynov.secretsanta.utils.Resource
-import ru.kheynov.secretsanta.utils.RoomAlreadyExistsException
-import ru.kheynov.secretsanta.utils.UserNotExistsException
+import ru.kheynov.secretsanta.utils.SantaException
 import java.time.LocalDate
 import javax.inject.Inject
-
-private const val TAG = "CreateRoomVM"
 
 @HiltViewModel
 class CreateRoomFragmentViewModel @Inject constructor(
@@ -31,6 +27,7 @@ class CreateRoomFragmentViewModel @Inject constructor(
         object Loading : State
         object Idle : State
         data class Loaded(val room: RoomDTO.Info) : State
+        data class Error(val exception: SantaException) : State
     }
 
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
@@ -55,18 +52,15 @@ class CreateRoomFragmentViewModel @Inject constructor(
             when (val res = useCases.createRoomUseCase(room)) {
                 is Resource.Success -> {
                     _state.value = State.Loaded(res.result)
-                    Log.i(TAG, res.result.toString())
                     _actions.send(Action.ShowSuccess)
                 }
                 is Resource.Failure -> {
-                    _state.value = State.Idle
-                    Log.e(TAG, "Error", res.exception)
-                    val errorMsg = when (res.exception) {
-                        is RoomAlreadyExistsException -> "Room already exists"
-                        is UserNotExistsException -> "User not exists"
-                        else -> "Unknown error"
+                    if (res.exception is SantaException) {
+                        _state.value = State.Error(res.exception)
+                    } else {
+                        _state.value = State.Idle
+                        _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
                     }
-                    _actions.send(Action.ShowError(errorMsg))
                 }
             }
         }

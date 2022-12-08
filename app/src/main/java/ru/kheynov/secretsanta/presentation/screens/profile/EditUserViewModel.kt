@@ -22,11 +22,12 @@ class EditUserViewModel @Inject constructor(
     sealed interface State {
         object Loading : State
         data class Loaded(val username: String) : State
+        data class Error(val error: Exception) : State
     }
 
     sealed interface Action {
         object NavigateBack : Action
-        object ShowError : Action
+        data class ShowError(val error: String) : Action
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -39,7 +40,7 @@ class EditUserViewModel @Inject constructor(
         viewModelScope.launch {
             when (val res = useCases.getSelfInfoUseCase()) {
                 is Resource.Failure -> {
-                    _actions.send(Action.ShowError)
+                    _state.value = State.Error(res.exception)
                 }
                 is Resource.Success -> {
                     _state.value = State.Loaded(res.result.username)
@@ -51,8 +52,15 @@ class EditUserViewModel @Inject constructor(
     fun saveUsername(name: String) {
         viewModelScope.launch {
             _state.value = State.Loading
-            //TODO: add name validation
-            useCases.updateUserUseCase(UpdateUser(name))
+            with(name) {
+                if (isBlank()) {
+                    _actions.send(Action.ShowError("Name couldn't be blank"))
+                }
+                if (length > 15) {
+                    _actions.send(Action.ShowError("Name too long"))
+                }
+            }
+            useCases.updateUserUseCase(updateUser = UpdateUser(username = name))
             _actions.send(Action.NavigateBack)
         }
     }

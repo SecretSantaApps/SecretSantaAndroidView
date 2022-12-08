@@ -49,7 +49,7 @@ class RoomsListFragment : Fragment() {
             joinRoomButton.setOnClickListener {
                 activity?.supportFragmentManager?.beginTransaction()
                     ?.replace(R.id.fragment_container, JoinRoomFragment())
-                    ?.addToBackStack("")
+                    ?.addToBackStack(null)
                     ?.commit()
             }
         }
@@ -102,7 +102,7 @@ class RoomsListFragment : Fragment() {
         }
         fragment.arguments = args
         activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fragment_container, fragment)?.addToBackStack("")?.commit() ?: Log.i(
+            ?.replace(R.id.fragment_container, fragment)?.addToBackStack(null)?.commit() ?: Log.i(
             tag, "Unable to navigate"
         )
     }
