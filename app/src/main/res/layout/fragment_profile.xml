@@ -28,10 +28,12 @@
         android:clickable="true"
         android:contentDescription="@string/log_out_button_content_description"
         android:focusable="true"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_logout"
         app:layout_constraintBottom_toBottomOf="@+id/profile_title_text_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/profile_title_text_view" />
+        app:layout_constraintTop_toTopOf="@+id/profile_title_text_view"
+        app:tint="@color/colorPrimary" />
 
     <ImageView
         android:id="@+id/avatar_image"
@@ -96,7 +98,7 @@
         android:id="@+id/delete_profile_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +107,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="4sp"
             android:fontFamily="@font/open_sans"
             android:text="@string/also_you_can"
             android:textSize="16sp" />

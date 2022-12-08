@@ -32,6 +32,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Room Details" />
 
+    <!--    copy link in the left of room details name-->
+    <ImageButton
+        android:id="@+id/room_details_copy_link_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="@string/copy_link_description"
+        android:focusable="true"
+        android:src="@drawable/ic_copy_link"
+        app:layout_constraintBottom_toBottomOf="@+id/room_details_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/room_details_name" />
+
     <TextView
         android:id="@+id/room_owner"
         android:layout_width="match_parent"
@@ -116,16 +131,6 @@
         app:layout_constraintTop_toBottomOf="@+id/room_max_price"
         tools:text="Room recipient:" />
 
-    <!--    <com.google.android.material.button.MaterialButton
-            android:id="@+id/join_user_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/invite_user"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/room_recipient" />-->
-
     <TextView
         android:id="@+id/room_players_title"
         android:layout_width="wrap_content"
@@ -155,11 +160,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/start_stop_game_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="16dp"
         android:fontFamily="@font/open_sans"
         android:text="@string/start_game"
+        app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

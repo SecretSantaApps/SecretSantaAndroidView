@@ -17,4 +17,7 @@
     <color name="colorPrimaryVariant">#525252</color>
 
     <color name="colorAccent">#E2437C</color>
+    <color name="colorAccent20">#33E2437C</color>
+    <color name="colorAccent50">#80E2437C</color>
+
 </resources>

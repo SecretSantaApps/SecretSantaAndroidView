@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">SecretSanta</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="rooms_menu_title">Rooms</string>
     <string name="create_menu_title">New room</string>
     <string name="profile_menu_title">Profile</string>
@@ -22,28 +21,26 @@
     <string name="cancel_button">Cancel</string>
     <string name="delete_profile_dialog_title">Profile deletion</string>
     <string name="delete_profile_dialog_confirmation">Are you sure you want to delete your account? This action cannot be undone.</string>
-    <string name="sign_in_firebase_button_text">Sign in via firebase</string>
+    <string name="sign_in_firebase_button_text">Sign in</string>
     <string name="create_room_title">Create room</string>
     <string name="password_input_hint">New password (optional)</string>
     <string name="maximum_gift_price_hint">Maximum gift price (optional)</string>
     <string name="date_picker_hint">Choose deadline date (optional)</string>
-    <string name="create_room_button_hint">Create room</string>
     <string name="room_created_successfully">Room created successfully!</string>
     <string name="create_another_room">Create yet another</string>
-    <string name="room_name_placeholder">Room name: %1$s</string>
-    <string name="room_password_placeholder">Room password: %1$s</string>
-    <string name="room_max_price_placeholder">Max gift price: %1$s</string>
-    <string name="room_deadline_placeholder">Deadline: %1$s</string>
-    <string name="rooms_list_title">Rooms list</string>
+    <string name="room_name_placeholder"><i>Room name:</i> %1$s</string>
+    <string name="room_password_placeholder"><i>Room password:</i> %1$s</string>
+    <string name="room_max_price_placeholder"><i>Max gift price:</i> %1$s</string>
+    <string name="room_deadline_placeholder"><i>Deadline:</i> %1$s</string>
+    <string name="rooms_list_title">My rooms</string>
     <string name="members_count_placeholder">%1$s members</string>
     <string name="game_started_text">Game started</string>
     <string name="waiting_for_start">Waiting for start</string>
-    <string name="deadline_placeholder">Until: %1$s</string>
+    <string name="deadline_placeholder"><i>Until:</i> %1$s</string>
     <string name="room_players_title">Room Players</string>
-    <string name="room_owner_placeholder">Room owner: %1$s</string>
-    <string name="room_id_placeholder">Room ID: %1$s</string>
-    <string name="room_date_placeholder">Deadline: %1$s</string>
-    <string name="room_recipient_placeholder">Your gift recipient: %1$s</string>
+    <string name="room_owner_placeholder"><i>Room owner:</i> %1$s</string>
+    <string name="room_id_placeholder"><i>Room ID:</i> %1$s</string>
+    <string name="room_recipient_placeholder"><i>Your gift recipient:</i> %1$s</string>
     <string name="invite_user">Invite user</string>
     <string name="start_game">Start game</string>
     <string name="stop_game">Stop game</string>
@@ -58,4 +55,8 @@
     <string name="new_username_hint">New username</string>
     <string name="globe_button">rooms list</string>
     <string name="create_room_button">create room</string>
+    <string name="delete">Delete</string>
+    <string name="join_room">Join room</string>
+    <string name="copy_link_description">copy link</string>
+    <string name="copy_link">Copy link</string>
 </resources>

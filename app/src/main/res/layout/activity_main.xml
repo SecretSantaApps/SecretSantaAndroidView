@@ -32,12 +32,12 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/create_room_button"
             android:src="@drawable/ic_baseline_add_24"
-            app:fabCustomSize="80dp"
+            app:fabCustomSize="72dp"
             app:layout_constraintBottom_toBottomOf="@id/list_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:maxImageSize="40dp"
+            app:maxImageSize="45dp"
             tools:ignore="RedundantDescriptionCheck" />
 
         <ImageButton
@@ -48,7 +48,7 @@
             android:contentDescription="@string/globe_button"
             android:minHeight="48dp"
             android:scaleType="center"
-            android:src="@drawable/ic_globe"
+            android:src="@drawable/ic_rooms_list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/create_room_fab"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,6 @@
             android:layout_height="50dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/profile_menu_title"
-            android:minHeight="48dp"
             android:scaleType="center"
             android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintBottom_toBottomOf="parent"

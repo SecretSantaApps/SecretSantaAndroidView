@@ -45,20 +45,20 @@
 
             <ImageButton
                 android:id="@+id/kick_user_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/block_button"
-                android:scaleType="fitXY"
+                android:scaleType="center"
                 android:src="@drawable/ic_baseline_block_24" />
 
             <ImageButton
                 android:id="@+id/leave_user_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/leave_button"
-                android:scaleType="fitXY"
+                android:scaleType="center"
                 android:src="@drawable/ic_baseline_logout_24"
                 android:visibility="gone" />
         </FrameLayout>
