@@ -119,7 +119,9 @@ class CreateRoomFragment : Fragment() {
         when (action) {
             is CreateRoomFragmentViewModel.Action.ShowError -> {
                 Toast.makeText(
-                    context, "Error: ${action.error}", Toast.LENGTH_SHORT
+                    context,
+                    "Error: ${action.error.getText(context)}",
+                    Toast.LENGTH_SHORT
                 ).show()
             }
             CreateRoomFragmentViewModel.Action.ShowSuccess -> {
@@ -135,11 +137,9 @@ class CreateRoomFragment : Fragment() {
                     }
                     fragment.arguments = args
                     activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.fragment_container, fragment)?.commit()
-                        ?: Log.i(
-                            "CreateRoomFragment",
-                            "Unable to navigate"
-                        )
+                        ?.replace(R.id.fragment_container, fragment)?.commit() ?: Log.i(
+                        "CreateRoomFragment", "Unable to navigate"
+                    )
                 }
             }
         }

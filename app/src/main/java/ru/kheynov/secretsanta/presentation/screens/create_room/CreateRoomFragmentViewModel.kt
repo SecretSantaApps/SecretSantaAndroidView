@@ -9,10 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.domain.use_cases.rooms.RoomsUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.SantaException
+import ru.kheynov.secretsanta.utils.UiText
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -34,7 +36,7 @@ class CreateRoomFragmentViewModel @Inject constructor(
     val actions: Flow<Action> = _actions.receiveAsFlow()
 
     sealed interface Action {
-        data class ShowError(val error: String) : Action
+        data class ShowError(val error: UiText) : Action
         object ShowSuccess : Action
     }
 
@@ -45,7 +47,13 @@ class CreateRoomFragmentViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = State.Loading
             if (room.roomName.isBlank()) {
-                _actions.send(Action.ShowError("Room name can't be empty"))
+                _actions.send(
+                    Action.ShowError(
+                        UiText.StringResource(
+                            R.string.room_name_empty_error
+                        )
+                    )
+                )
                 _state.value = State.Idle
                 return@launch
             }
@@ -59,7 +67,13 @@ class CreateRoomFragmentViewModel @Inject constructor(
                         _state.value = State.Error(res.exception)
                     } else {
                         _state.value = State.Idle
-                        _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
+                        _actions.send(
+                            Action.ShowError(
+                                UiText.PlainText(
+                                    res.exception.javaClass.simpleName.toString()
+                                )
+                            )
+                        )
                     }
                 }
             }

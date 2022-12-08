@@ -15,6 +15,7 @@ import ru.kheynov.secretsanta.domain.entities.RegisterUser
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.SantaException
+import ru.kheynov.secretsanta.utils.UiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +39,7 @@ class RegisterActivityViewModel @Inject constructor(
     val actions: Flow<Action> = _actions.receiveAsFlow()
 
     sealed interface Action {
-        data class ShowError(val error: String) : Action
+        data class ShowError(val error: UiText) : Action
         object RouteToMain : Action
     }
 
@@ -51,7 +52,13 @@ class RegisterActivityViewModel @Inject constructor(
                         _state.value = State.Error(res.exception)
                     } else {
                         _state.value = State.Idle
-                        _actions.send(Action.ShowError(res.exception.message.toString()))
+                        _actions.send(
+                            Action.ShowError(
+                                UiText.PlainText(
+                                    res.exception.message.toString()
+                                )
+                            )
+                        )
                     }
                 }
                 is Resource.Success -> {

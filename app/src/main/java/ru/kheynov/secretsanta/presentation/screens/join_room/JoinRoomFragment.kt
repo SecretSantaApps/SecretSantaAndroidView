@@ -59,23 +59,29 @@ class JoinRoomFragment : Fragment() {
                 viewModel.state.collect(::updateUI)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.actions.collect(::handleAction)
-            }
+            viewModel.actions.collect(::handleAction)
         }
     }
 
     private fun handleAction(action: JoinRoomViewModel.Action) {
         when (action) {
             JoinRoomViewModel.Action.NavigateBack -> {
-                activity?.supportFragmentManager
-                    ?.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                activity?.supportFragmentManager?.popBackStack(
+                    null,
+                    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                )
                 activity?.viewModels<MainActivityViewModel>()?.value?.navigateToRoomsList()
             }
             is JoinRoomViewModel.Action.ShowError -> {
-                Log.e("JoinRoomFragment", action.error)
-                Toast.makeText(context, action.error, Toast.LENGTH_SHORT).show()
+                Log.e("JoinRoomFragment", action.error.getText(context))
+                Toast.makeText(
+                    context, action.error.getText(context), Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

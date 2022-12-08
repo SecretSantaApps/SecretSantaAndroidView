@@ -72,7 +72,7 @@ class EditUserFragment : Fragment() {
         when (action) {
             Action.NavigateBack -> activity?.supportFragmentManager?.popBackStack()
             is Action.ShowError -> Toast.makeText(
-                context, "Error: ${action.error}", Toast.LENGTH_SHORT
+                context, "Error: ${action.error.getText(context)}", Toast.LENGTH_SHORT
             ).show()
         }
     }

@@ -113,7 +113,7 @@ class ProfileFragment : Fragment() {
             }
             is Action.ShowError -> Toast.makeText(
                 context!!,
-                "Error: ${action.error}",
+                "Error: ${action.error.getText(context)}",
                 Toast.LENGTH_SHORT
             )
                 .show()

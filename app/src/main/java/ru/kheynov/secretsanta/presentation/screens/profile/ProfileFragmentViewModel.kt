@@ -13,6 +13,7 @@ import retrofit2.HttpException
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
 import ru.kheynov.secretsanta.utils.SantaException
+import ru.kheynov.secretsanta.utils.UiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +29,7 @@ class ProfileFragmentViewModel @Inject constructor(
     sealed interface Action {
         object NavigateToLoginScreen : Action
         object NavigateToEditUser : Action
-        data class ShowError(val error: String) : Action
+        data class ShowError(val error: UiText) : Action
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -51,7 +52,13 @@ class ProfileFragmentViewModel @Inject constructor(
                     if (res.exception is SantaException || res.exception is HttpException) {
                         _state.value = State.Error(res.exception)
                     } else {
-                        _actions.send(Action.ShowError(res.exception.javaClass.simpleName.toString()))
+                        _actions.send(
+                            Action.ShowError(
+                                UiText.PlainText(
+                                    res.exception.javaClass.simpleName.toString()
+                                )
+                            )
+                        )
                     }
                 }
                 is Resource.Success -> {

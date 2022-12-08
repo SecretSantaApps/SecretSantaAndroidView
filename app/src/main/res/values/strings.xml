@@ -59,4 +59,8 @@
     <string name="join_room">Join room</string>
     <string name="copy_link_description">copy link</string>
     <string name="copy_link">Copy link</string>
+    <string name="room_name_empty_error">Room name can\'t be empty</string>
+    <string name="room_id_empty_error">Room ID can\'t be empty</string>
+    <string name="name_blank_error">Name couldn\'t be blank</string>
+    <string name="name_too_long">Name too long</string>
 </resources>

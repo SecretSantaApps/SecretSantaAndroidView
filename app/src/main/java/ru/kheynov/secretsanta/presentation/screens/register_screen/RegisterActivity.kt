@@ -45,12 +45,15 @@ class RegisterActivity : AppCompatActivity() {
                             .setText(viewModel.username)
 
                         registerButton.visibility = registerUsernameInput.visibility
-
                         registerTitleText.visibility = registerUsernameInput.visibility
                     }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch {
             viewModel.actions.collect(::handleActions)
         }
@@ -61,7 +64,7 @@ class RegisterActivity : AppCompatActivity() {
             RegisterActivityViewModel.Action.RouteToMain -> navigateToLoginScreen(this)
             is RegisterActivityViewModel.Action.ShowError -> Toast.makeText(
                 this,
-                "Error: ${action.error}",
+                "Error: ${action.error.getText(this)}",
                 Toast.LENGTH_SHORT
             ).show()
         }

@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.domain.entities.UpdateUser
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
 import ru.kheynov.secretsanta.utils.Resource
+import ru.kheynov.secretsanta.utils.UiText
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +29,7 @@ class EditUserViewModel @Inject constructor(
 
     sealed interface Action {
         object NavigateBack : Action
-        data class ShowError(val error: String) : Action
+        data class ShowError(val error: UiText) : Action
     }
 
     private val _state = MutableStateFlow<State>(State.Loading)
@@ -54,10 +56,10 @@ class EditUserViewModel @Inject constructor(
             _state.value = State.Loading
             with(name) {
                 if (isBlank()) {
-                    _actions.send(Action.ShowError("Name couldn't be blank"))
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string.name_blank_error)))
                 }
                 if (length > 15) {
-                    _actions.send(Action.ShowError("Name too long"))
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string.name_too_long)))
                 }
             }
             useCases.updateUserUseCase(updateUser = UpdateUser(username = name))
