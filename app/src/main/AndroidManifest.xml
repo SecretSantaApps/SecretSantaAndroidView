@@ -12,7 +12,6 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SecretSanta"
         tools:targetApi="31">
@@ -46,6 +45,10 @@
                     android:host="santa.kheynov.ru"
                     android:pathPrefix="/join"
                     android:scheme="https" />
+                <data
+                    android:host="santa.kheynov.ru"
+                    android:pathPrefix="/join"
+                    android:scheme="santa" />
             </intent-filter>
         </activity>
     </application>

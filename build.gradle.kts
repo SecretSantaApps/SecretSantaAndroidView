@@ -12,6 +12,9 @@ buildscript {
         classpath("com.google.gms:google-services:4.3.14")
         val navVersion = "2.5.3"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
+
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.2")
+        classpath("com.google.firebase:perf-plugin:1.4.2")
     }
 }
 

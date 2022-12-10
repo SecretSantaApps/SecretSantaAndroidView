@@ -20,4 +20,8 @@
     <color name="colorAccent20">#33E2437C</color>
     <color name="colorAccent50">#80E2437C</color>
 
+    <color name="warning">#FFC107</color>
+    <color name="error">#F44336</color>
+    <color name="success">#4CAF50</color>
+
 </resources>

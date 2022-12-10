@@ -17,20 +17,21 @@ import ru.kheynov.secretsanta.utils.generateInviteLink
 @AndroidEntryPoint
 class CreatedSuccessfullyFragment : Fragment() {
     private lateinit var binding: FragmentCreatedSuccessfullyBinding
-
+    
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         binding = FragmentCreatedSuccessfullyBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.createAnotherRoomButton.setOnClickListener {
-            activity?.supportFragmentManager?.popBackStack()
-        }
+        
         binding.apply {
+            createAnotherRoomButton.setOnClickListener {
+                activity?.supportFragmentManager?.popBackStack()
+            }
             roomName.text =
                 getString(R.string.room_name_placeholder, arguments?.getString("roomName"))
             roomPassword.text =
@@ -40,7 +41,7 @@ class CreatedSuccessfullyFragment : Fragment() {
                 if (contains("0") || contains("null")) {
                     roomMaxPrice.visibility = View.GONE
                 } else {
-                    roomMaxPrice.text = getString(R.string.room_max_price_placeholder, this)
+                    roomMaxPrice.text = getString(R.string.room_max_price_placeholder, this.toInt())
                 }
             }
             arguments?.getString("date")?.run {
@@ -67,5 +68,5 @@ class CreatedSuccessfullyFragment : Fragment() {
             }
         }
     }
-
+    
 }

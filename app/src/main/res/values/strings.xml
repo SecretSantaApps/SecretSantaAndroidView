@@ -30,7 +30,7 @@
     <string name="create_another_room">Create yet another</string>
     <string name="room_name_placeholder"><i>Room name:</i> %1$s</string>
     <string name="room_password_placeholder"><i>Room password:</i> %1$s</string>
-    <string name="room_max_price_placeholder"><i>Max gift price:</i> %1$s</string>
+    <string name="room_max_price_placeholder"><i>Max gift price:</i> %1$d</string>
     <string name="room_deadline_placeholder"><i>Deadline:</i> %1$s</string>
     <string name="rooms_list_title">My rooms</string>
     <string name="members_count_placeholder">%1$s members</string>
@@ -60,7 +60,29 @@
     <string name="copy_link_description">copy link</string>
     <string name="copy_link">Copy link</string>
     <string name="room_name_empty_error">Room name can\'t be empty</string>
-    <string name="room_id_empty_error">Room ID can\'t be empty</string>
+    <string name="room_id_or_password_empty_error">Room ID and password can\'t be empty</string>
     <string name="name_blank_error">Name couldn\'t be blank</string>
     <string name="name_too_long">Name too long</string>
+    <string name="max_price_too_high_error">Maximum price too high</string>
+    <string name="password_length_too_high_error">Password too long</string>
+    <string name="wrong_max_price">Illegel maximum price</string>
+    <string name="kick_dialog_button">Kick</string>
+    <string name="kick_confirmation">Are you sure you want to kick this player</string>
+    <string name="kick_dialog">Kick user</string>
+    <string name="leave_dialog">Leave room</string>
+    <string name="leave_confirmation">Are you sure you want to leave this room?</string>
+    <string name="leave_dialog_button">Leave</string>
+    <string name="retry_button_text">Retry</string>
+    <string name="message_for_devs_placeholder">Message for developer: %1$s</string>
+    <string name="internet_connection_error">Internet connection error.\nServer unavailable, try later or check your connection.</string>
+    <string name="santa_exception_placeholder">Error: %1$s</string>
+    <string name="empty_rooms_list_error">You did not join any room yet</string>
+    <string name="wrong_credentials_format">Wrong credentials</string>
+    <string name="game_already_started_error">Game already started</string>
+    <string name="user_already_in_room_exception">User already in room</string>
+    <string name="room_not_exists_error">Room not exists</string>
+    <string name="user_not_exists_error">User not exists</string>
 </resources>
+
+
+<!--Translate resources to russian-->

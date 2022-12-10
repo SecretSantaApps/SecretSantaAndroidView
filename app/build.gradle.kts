@@ -6,6 +6,8 @@ plugins {
     id("kotlinx-serialization")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -15,8 +17,8 @@ android {
         applicationId = "ru.kheynov.secretsanta"
         minSdk = 21
         targetSdk = 33
-        versionCode = 1
-        versionName = "0.0.1-alpha"
+        versionCode = 2
+        versionName = "0.1-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +38,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+        isCoreLibraryDesugaringEnabled = true
     }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
@@ -62,8 +65,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
     // Hilt
-    kapt("com.google.dagger:hilt-android-compiler:2.42")
-    implementation("com.google.dagger:hilt-android:2.42")
+    kapt("com.google.dagger:hilt-android-compiler:2.44.2")
+    implementation("com.google.dagger:hilt-android:2.44.2")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
@@ -87,25 +90,26 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
 
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
     // Navigation
-    val navVersion = "2.4.2"
+    val navVersion = "2.5.3"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
-
-    // Picasso image loader
-    implementation("com.squareup.picasso:picasso:2.8")
 
     //SplashScreen
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:26.1.1"))
+    implementation(platform("com.google.firebase:firebase-bom:31.1.1"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:20.4.0")
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-perf-ktx")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.0")
 }

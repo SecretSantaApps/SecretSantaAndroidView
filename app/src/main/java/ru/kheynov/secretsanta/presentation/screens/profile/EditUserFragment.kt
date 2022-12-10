@@ -18,11 +18,11 @@ import ru.kheynov.secretsanta.presentation.screens.profile.EditUserViewModel.Sta
 
 @AndroidEntryPoint
 class EditUserFragment : Fragment() {
-
+    
     private val viewModel by viewModels<EditUserViewModel>()
-
+    
     private lateinit var binding: FragmentEditUserBinding
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -30,18 +30,18 @@ class EditUserFragment : Fragment() {
         binding = FragmentEditUserBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
-
+    
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
             viewModel.actions.collect(::handleAction)
         }
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
             }
         }
@@ -49,7 +49,7 @@ class EditUserFragment : Fragment() {
             viewModel.saveUsername(binding.editUsernameInput.text.toString())
         }
     }
-
+    
     private fun updateUI(state: State) {
         binding.apply {
             editUserProgressBar.visibility = if (state == State.Loading) View.VISIBLE
@@ -67,14 +67,14 @@ class EditUserFragment : Fragment() {
             }
         }
     }
-
+    
     private fun handleAction(action: Action) {
         when (action) {
             Action.NavigateBack -> activity?.supportFragmentManager?.popBackStack()
-            is Action.ShowError -> Toast.makeText(
-                context, "Error: ${action.error.getText(context)}", Toast.LENGTH_SHORT
-            ).show()
+            is Action.ShowError -> Toast.makeText(context,
+                "Error: ${action.error.getText(context)}",
+                Toast.LENGTH_SHORT).show()
         }
     }
-
+    
 }

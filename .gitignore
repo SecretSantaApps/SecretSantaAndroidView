@@ -52,3 +52,7 @@ app/google-services.json
 /feature_auth/src/test/java/ru/kheynov/feature_auth/
 /data/src/androidTest/java/ru/kheynov/data/
 /data/src/test/java/ru/kheynov/data/
+# Gradle files
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json

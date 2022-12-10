@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,18 +19,18 @@ import ru.kheynov.secretsanta.presentation.MainActivityViewModel
 
 @AndroidEntryPoint
 class JoinRoomFragment : Fragment() {
-
+    
     private lateinit var binding: FragmentJoinRoomBinding
-
+    
     private val viewModel by viewModels<JoinRoomViewModel>()
-
+    
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
         binding = FragmentJoinRoomBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
@@ -40,12 +39,6 @@ class JoinRoomFragment : Fragment() {
             }
             arguments?.getString("pass")?.let {
                 roomPasswordInput.setText(it)
-                if (!roomPasswordInput.text.isNullOrBlank() && !roomIdInput.text.isNullOrBlank()) {
-                    viewModel.joinRoom(
-                        roomId = roomIdInput.text.toString(),
-                        password = roomPasswordInput.text.toString()
-                    )
-                }
             }
             joinRoomButton.setOnClickListener {
                 viewModel.joinRoom(
@@ -55,26 +48,23 @@ class JoinRoomFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
             }
         }
     }
-
+    
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
             viewModel.actions.collect(::handleAction)
         }
     }
-
+    
     private fun handleAction(action: JoinRoomViewModel.Action) {
         when (action) {
             JoinRoomViewModel.Action.NavigateBack -> {
-                activity?.supportFragmentManager?.popBackStack(
-                    null,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                activity?.supportFragmentManager?.popBackStack()
                 activity?.viewModels<MainActivityViewModel>()?.value?.navigateToRoomsList()
             }
             is JoinRoomViewModel.Action.ShowError -> {
@@ -85,7 +75,7 @@ class JoinRoomFragment : Fragment() {
             }
         }
     }
-
+    
     private fun updateUI(state: JoinRoomViewModel.State) {
         binding.apply {
             roomIdInput.visibility =
@@ -96,5 +86,5 @@ class JoinRoomFragment : Fragment() {
                 if (state is JoinRoomViewModel.State.Loading) View.VISIBLE else View.GONE
         }
     }
-
+    
 }
