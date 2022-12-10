@@ -68,9 +68,9 @@ class JoinRoomFragment : Fragment() {
                 activity?.viewModels<MainActivityViewModel>()?.value?.navigateToRoomsList()
             }
             is JoinRoomViewModel.Action.ShowError -> {
-                Log.e("JoinRoomFragment", action.error.getText(context))
+                Log.e("JoinRoomFragment", action.error.getText(requireContext()))
                 Toast.makeText(
-                    context, action.error.getText(context), Toast.LENGTH_SHORT
+                    context, action.error.getText(requireContext()), Toast.LENGTH_SHORT
                 ).show()
             }
         }

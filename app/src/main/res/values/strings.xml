@@ -61,11 +61,11 @@
     <string name="copy_link">Copy link</string>
     <string name="room_name_empty_error">Room name can\'t be empty</string>
     <string name="room_id_or_password_empty_error">Room ID and password can\'t be empty</string>
-    <string name="name_blank_error">Name couldn\'t be blank</string>
+    <string name="name_blank_error">Name could not be blank</string>
     <string name="name_too_long">Name too long</string>
     <string name="max_price_too_high_error">Maximum price too high</string>
     <string name="password_length_too_high_error">Password too long</string>
-    <string name="wrong_max_price">Illegel maximum price</string>
+    <string name="wrong_max_price">Illegal maximum price</string>
     <string name="kick_dialog_button">Kick</string>
     <string name="kick_confirmation">Are you sure you want to kick this player</string>
     <string name="kick_dialog">Kick user</string>
@@ -82,7 +82,5 @@
     <string name="user_already_in_room_exception">User already in room</string>
     <string name="room_not_exists_error">Room not exists</string>
     <string name="user_not_exists_error">User not exists</string>
+    <string name="error">Something went wrong</string>
 </resources>
-
-
-<!--Translate resources to russian-->

@@ -3,12 +3,14 @@ package ru.kheynov.secretsanta.presentation.screens.join_room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.domain.use_cases.game.GameUseCases
 import ru.kheynov.secretsanta.utils.GameAlreadyStartedException
@@ -18,6 +20,7 @@ import ru.kheynov.secretsanta.utils.SantaException
 import ru.kheynov.secretsanta.utils.UiText
 import ru.kheynov.secretsanta.utils.UserAlreadyInRoomException
 import ru.kheynov.secretsanta.utils.UserNotExistsException
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +44,8 @@ class JoinRoomViewModel @Inject constructor(
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
     val actions: Flow<Action> = _actions.receiveAsFlow()
     
+    private val ioDispatcher = Dispatchers.IO
+    
     fun joinRoom(roomId: String, password: String) {
         viewModelScope.launch {
             _state.value = State.Loading
@@ -56,7 +61,10 @@ class JoinRoomViewModel @Inject constructor(
                 return@launch
             }
             
-            when (val res = gameUseCases.joinGameUseCase(roomId, password)) {
+            val res = withContext(ioDispatcher) {
+                gameUseCases.joinGameUseCase(roomId, password)
+            }
+            when (res) {
                 is Resource.Success -> {
                     _actions.send(Action.NavigateBack)
                 }
@@ -69,9 +77,14 @@ class JoinRoomViewModel @Inject constructor(
                             is RoomNotExistsException -> UiText.StringResource(R.string.room_not_exists_error)
                             is UserNotExistsException -> UiText.StringResource(R.string.user_not_exists_error)
                             else -> UiText.PlainText(e.javaClass.simpleName.toString())
+                            
                         }))
                     } else {
-                        _actions.send(Action.ShowError(UiText.PlainText(res.exception.javaClass.simpleName.toString())))
+                        if (res.exception is IOException)
+                            _actions.send(Action.ShowError(UiText.StringResource(R.string
+                                .internet_connection_error)))
+                        else
+                            _actions.send(Action.ShowError(UiText.PlainText(res.exception.javaClass.simpleName.toString())))
                     }
                 }
             }

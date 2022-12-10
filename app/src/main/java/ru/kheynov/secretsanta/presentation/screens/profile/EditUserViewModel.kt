@@ -3,6 +3,7 @@ package ru.kheynov.secretsanta.presentation.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.domain.entities.UpdateUser
 import ru.kheynov.secretsanta.domain.use_cases.users.UsersUseCases
@@ -39,9 +41,14 @@ class EditUserViewModel @Inject constructor(
     private val _actions: Channel<Action> = Channel(Channel.BUFFERED)
     val actions: Flow<Action> = _actions.receiveAsFlow()
     
+    private val ioDispatcher = Dispatchers.IO
+    
     init {
         viewModelScope.launch {
-            when (val res = useCases.getSelfInfoUseCase()) {
+            val res = withContext(ioDispatcher) {
+                useCases.getSelfInfoUseCase()
+            }
+            when (res) {
                 is Resource.Failure -> {
                     _actions.send(Action.ShowError(when (val e = res.exception) {
                         is UserNotExistsException -> UiText.StringResource(R.string.user_not_exists_error)
@@ -72,8 +79,15 @@ class EditUserViewModel @Inject constructor(
                     return@launch
                 }
             }
-            useCases.updateUserUseCase(updateUser = UpdateUser(username = name))
-            _actions.send(Action.NavigateBack)
+            val res = withContext(ioDispatcher) {
+                useCases.updateUserUseCase(updateUser = UpdateUser(username = name))
+            }
+            when (res) {
+                is Resource.Failure -> {
+                    _actions.send(Action.ShowError(UiText.PlainText(res.exception.toString())))
+                }
+                is Resource.Success -> _actions.send(Action.NavigateBack)
+            }
         }
     }
 }

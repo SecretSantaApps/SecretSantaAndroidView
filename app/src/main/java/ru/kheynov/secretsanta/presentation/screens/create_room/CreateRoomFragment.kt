@@ -1,7 +1,6 @@
 package ru.kheynov.secretsanta.presentation.screens.create_room
 
 import android.app.DatePickerDialog
-import android.icu.util.Calendar
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,14 +20,15 @@ import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfullyFragment
 import ru.kheynov.secretsanta.utils.dateFormatter
 import java.time.LocalDate
+import java.util.*
 
 @AndroidEntryPoint
 class CreateRoomFragment : Fragment() {
-
+    
     private lateinit var binding: FragmentCreateRoomBinding
-
+    
     private val viewModel by viewModels<CreateRoomFragmentViewModel>()
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -36,17 +36,17 @@ class CreateRoomFragment : Fragment() {
         binding = FragmentCreateRoomBinding.inflate(inflater, container, false)
         return binding.root
     }
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.collect(::updateUI)
             }
         }
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.date.collect {
                     binding.pickDeadlineDate.text = it?.run {
                         getString(
@@ -69,20 +69,20 @@ class CreateRoomFragment : Fragment() {
                     })
                 viewModel.createRoom(room)
             }
-
+            
             pickDeadlineDate.setOnClickListener {
                 showDatePicker()
             }
         }
     }
-
+    
     private fun showDatePicker() {
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
         val datePicker = DatePickerDialog(
-            context!!, { _, year_picker, month_picker, day_picker ->
+            requireContext(), { _, year_picker, month_picker, day_picker ->
                 Log.i(tag, "$day_picker $month_picker $year_picker")
                 if (year_picker == year && month_picker == month && day_picker < day) {
                     viewModel.setDate(null)
@@ -93,7 +93,7 @@ class CreateRoomFragment : Fragment() {
         )
         datePicker.show()
     }
-
+    
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
@@ -101,7 +101,7 @@ class CreateRoomFragment : Fragment() {
         }
         viewModel.clearDate()
     }
-
+    
     private fun updateUI(state: CreateRoomFragmentViewModel.State) {
         binding.apply {
             createRoomButton.visibility =
@@ -114,13 +114,13 @@ class CreateRoomFragment : Fragment() {
                 if (state is CreateRoomFragmentViewModel.State.Loading) View.VISIBLE else View.GONE
         }
     }
-
+    
     private fun handleAction(action: CreateRoomFragmentViewModel.Action) {
         when (action) {
             is CreateRoomFragmentViewModel.Action.ShowError -> {
                 Toast.makeText(
                     context,
-                    "Error: ${action.error.getText(context)}",
+                    "Error: ${action.error.getText(requireContext())}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
