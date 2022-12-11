@@ -21,6 +21,7 @@ import ru.kheynov.secretsanta.utils.dateFormatter
 import java.time.LocalDate
 import java.util.*
 
+
 @AndroidEntryPoint
 class CreateRoomFragment : Fragment() {
     
@@ -48,12 +49,9 @@ class CreateRoomFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.date.collect {
                     binding.pickDeadlineDate.text = it?.run {
-                        getString(
-                            R.string.room_deadline_placeholder, it.format(dateFormatter).toString()
-                        )
-                    } ?: getString(
-                        R.string.date_picker_hint
-                    )
+                        getString(R.string.room_deadline_placeholder,
+                            it.format(dateFormatter).toString())
+                    } ?: getString(R.string.date_picker_hint)
                 }
             }
         }
@@ -77,16 +75,15 @@ class CreateRoomFragment : Fragment() {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        val datePicker = DatePickerDialog(
-            requireContext(), { _, year_picker, month_picker, day_picker ->
+        val datePicker =
+            DatePickerDialog(requireContext(), { _, year_picker, month_picker, day_picker ->
                 Log.i(tag, "$day_picker $month_picker $year_picker")
                 if (year_picker == year && month_picker == month && day_picker < day) {
                     viewModel.setDate(null)
                 } else {
                     viewModel.setDate(LocalDate.of(year_picker, month_picker + 1, day_picker))
                 }
-            }, year, month, day
-        )
+            }, year, month, day)
         datePicker.show()
     }
     
@@ -114,11 +111,8 @@ class CreateRoomFragment : Fragment() {
     private fun handleAction(action: CreateRoomFragmentViewModel.Action) {
         when (action) {
             is CreateRoomFragmentViewModel.Action.ShowError -> {
-                Toast.makeText(
-                    context,
-                    action.error.getText(requireContext()),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, action.error.getText(requireContext()), Toast.LENGTH_SHORT)
+                    .show()
             }
             CreateRoomFragmentViewModel.Action.ShowSuccess -> {
                 if (viewModel.state.value is CreateRoomFragmentViewModel.State.Loaded) {
@@ -133,11 +127,8 @@ class CreateRoomFragment : Fragment() {
                     }
                     fragment.arguments = args
                     activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.fragment_container, fragment)
-                        ?.addToBackStack(null)
-                        ?.commit() ?: Log.i(
-                        "CreateRoomFragment", "Unable to navigate"
-                    )
+                        ?.replace(R.id.fragment_container, fragment)?.addToBackStack(null)?.commit()
+                        ?: Log.i("CreateRoomFragment", "Unable to navigate")
                 }
             }
         }

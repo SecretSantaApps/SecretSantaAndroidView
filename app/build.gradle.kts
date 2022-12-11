@@ -17,8 +17,8 @@ android {
         applicationId = "ru.kheynov.secretsanta"
         minSdk = 21
         targetSdk = 33
-        versionCode = 3
-        versionName = "0.1.5-beta"
+        versionCode = 5
+        versionName = "0.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

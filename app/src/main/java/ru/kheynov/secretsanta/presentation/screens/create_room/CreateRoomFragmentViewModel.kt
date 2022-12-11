@@ -20,6 +20,9 @@ import ru.kheynov.secretsanta.utils.UiText
 import java.time.LocalDate
 import javax.inject.Inject
 
+
+private const val passwordRegex = "^[A-Za-z0-9_]+\$"
+
 @HiltViewModel
 class CreateRoomFragmentViewModel @Inject constructor(
     private val useCases: RoomsUseCases,
@@ -82,11 +85,25 @@ class CreateRoomFragmentViewModel @Inject constructor(
                 _state.value = State.Idle
                 return@launch
             }
-            
-            if ((password?.length ?: 0) > 20) {
-                _actions.send(Action.ShowError(UiText.StringResource(R.string.password_length_too_high_error)))
-                _state.value = State.Idle
-                return@launch
+            with(password) {
+                if (isNullOrBlank()) null
+                else if (length > 20) {
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string.password_length_too_high_error)))
+                    _state.value = State.Idle
+                    return@launch
+                } else if (!Regex(passwordRegex).matches(this)) {
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string
+                        .invalid_password_format)))
+                    _state.value = State.Idle
+                    return@launch
+                } else if (length < 8) {
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string
+                        .password_too_short)))
+                    _state.value = State.Idle
+                    return@launch
+                } else {
+                    this
+                }
             }
             
             

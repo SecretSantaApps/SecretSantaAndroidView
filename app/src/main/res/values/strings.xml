@@ -83,4 +83,6 @@
     <string name="error">Something went wrong</string>
     <string name="room_length_too_high">Имя комнаты слишком длинное</string>
     <string name="error_image">Error image</string>
+    <string name="invalid_password_format">Invalid password format, it should contains only A–Z a–z 0–9 and \'_\' character</string>
+    <string name="password_too_short">Password too short</string>
 </resources>

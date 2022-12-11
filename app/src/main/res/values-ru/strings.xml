@@ -83,4 +83,6 @@
     <string name="rooms_list_title">Мои комнаты</string>
     <string name="room_players_title">Игроки</string>
     <string name="error_image">Иконка ошибки</string>
+    <string name="invalid_password_format">Неверный формат пароля, пароль может содержать только латиницу, цифры и символ подчеркивания</string>
+    <string name="password_too_short">Пароль слишком короткий</string>
 </resources>
