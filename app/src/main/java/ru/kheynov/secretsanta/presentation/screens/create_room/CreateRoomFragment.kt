@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.kheynov.secretsanta.R
 import ru.kheynov.secretsanta.databinding.FragmentCreateRoomBinding
-import ru.kheynov.secretsanta.domain.entities.RoomDTO
 import ru.kheynov.secretsanta.presentation.screens.create_room.room_created.CreatedSuccessfullyFragment
 import ru.kheynov.secretsanta.utils.dateFormatter
 import java.time.LocalDate
@@ -60,14 +59,11 @@ class CreateRoomFragment : Fragment() {
         }
         binding.apply {
             createRoomButton.setOnClickListener {
-                val room = RoomDTO.Create(roomName = roomNameInput.text.toString(),
-                    password = roomPasswordInput.text.toString(),
-                    date = viewModel.date.value,
-                    maxPrice = with(roomMaxPriceInput.text.toString()) {
-                        if (isNullOrBlank()) null
-                        else toInt()
-                    })
-                viewModel.createRoom(room)
+                val roomName = roomNameInput.text.toString()
+                val password = roomPasswordInput.text.toString()
+                val date = viewModel.date.value
+                val maxPrice = roomMaxPriceInput.text.toString()
+                viewModel.createRoom(roomName, password, date, maxPrice)
             }
             
             pickDeadlineDate.setOnClickListener {
@@ -120,7 +116,7 @@ class CreateRoomFragment : Fragment() {
             is CreateRoomFragmentViewModel.Action.ShowError -> {
                 Toast.makeText(
                     context,
-                    "Error: ${action.error.getText(requireContext())}",
+                    action.error.getText(requireContext()),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -137,7 +133,9 @@ class CreateRoomFragment : Fragment() {
                     }
                     fragment.arguments = args
                     activity?.supportFragmentManager?.beginTransaction()
-                        ?.replace(R.id.fragment_container, fragment)?.commit() ?: Log.i(
+                        ?.replace(R.id.fragment_container, fragment)
+                        ?.addToBackStack(null)
+                        ?.commit() ?: Log.i(
                         "CreateRoomFragment", "Unable to navigate"
                     )
                 }

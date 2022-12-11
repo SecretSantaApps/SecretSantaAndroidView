@@ -59,7 +59,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/profile_menu_title"
+            android:contentDescription="@string/profile_title"
             android:scaleType="center"
             android:src="@drawable/ic_baseline_person_24"
             app:layout_constraintBottom_toBottomOf="parent"

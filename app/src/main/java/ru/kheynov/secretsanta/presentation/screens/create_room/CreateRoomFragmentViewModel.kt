@@ -46,51 +46,56 @@ class CreateRoomFragmentViewModel @Inject constructor(
     val date: StateFlow<LocalDate?> = _date
     
     private val ioDispatcher = Dispatchers.IO
-    
-    fun createRoom(room: RoomDTO.Create) {
+    fun createRoom(roomName: String, password: String?, date: LocalDate?, maxPrice: String?) {
         viewModelScope.launch {
             _state.value = State.Loading
-            if (room.roomName.isBlank()) {
-                _actions.send(
-                    Action.ShowError(
-                        UiText.StringResource(
-                            R.string.room_name_empty_error
-                        )
-                    )
-                )
+            if (roomName.isBlank()) {
+                _actions.send(Action.ShowError(UiText.StringResource(R.string.room_name_empty_error)))
                 _state.value = State.Idle
                 return@launch
             }
             
-            if ((room.maxPrice ?: 0) > 1000000) {
-                _actions.send(
-                    Action.ShowError(
-                        UiText.StringResource(R.string.max_price_too_high_error)
-                    )
-                )
+            if (roomName.length > 20) {
+                _actions.send(Action.ShowError(UiText.StringResource(R.string.room_length_too_high)))
                 _state.value = State.Idle
                 return@launch
             }
-            if ((room.maxPrice ?: 0) < 0) {
-                _actions.send(
-                    Action.ShowError(
-                        UiText.StringResource(R.string.wrong_max_price)
-                    )
-                )
+            
+            val price: Int? = maxPrice.let {
+                if (it.isNullOrBlank() || it == "0") null
+                else try {
+                    it.toInt()
+                } catch (e: Exception) {
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string.wrong_max_price)))
+                    _state.value = State.Idle
+                    return@launch
+                }
+            }
+            
+            if ((price ?: 0) > 1000000) {
+                _actions.send(Action.ShowError(UiText.StringResource(R.string.max_price_too_high_error)))
+                _state.value = State.Idle
+                return@launch
+            }
+            if ((price ?: 0) < 0) {
+                _actions.send(Action.ShowError(UiText.StringResource(R.string.wrong_max_price)))
+                _state.value = State.Idle
+                return@launch
+            }
+            
+            if ((password?.length ?: 0) > 20) {
+                _actions.send(Action.ShowError(UiText.StringResource(R.string.password_length_too_high_error)))
                 _state.value = State.Idle
                 return@launch
             }
             
             
-            if ((room.password?.length ?: 0) > 20) {
-                _actions.send(
-                    Action.ShowError(
-                        UiText.StringResource(R.string.password_length_too_high_error)
-                    )
-                )
-                _state.value = State.Idle
-                return@launch
-            }
+            val room = RoomDTO.Create(
+                roomName,
+                password,
+                date,
+                price
+            )
             val res = withContext(ioDispatcher) {
                 useCases.createRoomUseCase(room)
             }
@@ -104,13 +109,7 @@ class CreateRoomFragmentViewModel @Inject constructor(
                         _state.value = State.Error(res.exception)
                     } else {
                         _state.value = State.Idle
-                        _actions.send(
-                            Action.ShowError(
-                                UiText.PlainText(
-                                    res.exception.javaClass.simpleName.toString()
-                                )
-                            )
-                        )
+                        _actions.send(Action.ShowError(UiText.PlainText(res.exception.javaClass.simpleName.toString())))
                     }
                 }
             }

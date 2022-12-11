@@ -88,7 +88,7 @@ class RoomDetailsFragment : Fragment() {
     private fun updateUI(state: State) {
         binding.bindErrorScreen(state)
         binding.apply {
-            roomOwner.visibility = if (state is State.Loading) View.GONE else View.VISIBLE
+            roomOwner.visibility = if (state is State.Loading) View.INVISIBLE else View.VISIBLE
             roomDate.visibility = roomOwner.visibility
             roomMaxPrice.visibility = roomOwner.visibility
             roomRecipient.visibility = roomOwner.visibility
@@ -151,7 +151,7 @@ class RoomDetailsFragment : Fragment() {
                             roomPassword.visibility = View.GONE
                             startStopGameButton.visibility = View.INVISIBLE
                             startStopGameButton.isEnabled = false
-                            roomDetailsCopyLinkButton.visibility = View.GONE
+                            roomDetailsCopyLinkButton.visibility = View.INVISIBLE
                         } else {
                             roomPassword.visibility = View.VISIBLE
                             startStopGameButton.visibility = View.VISIBLE

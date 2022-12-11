@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,9 @@ class CreatedSuccessfullyFragment : Fragment() {
         
         binding.apply {
             createAnotherRoomButton.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStack()
+                activity?.supportFragmentManager?.popBackStack() ?: run {
+                    Log.e(tag, "Unable to navigate back")
+                }
             }
             roomName.text =
                 getString(R.string.room_name_placeholder, arguments?.getString("roomName"))

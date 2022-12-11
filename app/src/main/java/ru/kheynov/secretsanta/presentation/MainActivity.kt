@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,25 +29,25 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
-
+    
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
-
+    
     private val viewModel by viewModels<MainActivityViewModel>()
-
+    
     private lateinit var binding: ActivityMainBinding
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        
         handleIntent(intent)
-
+        
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.room.collect(::navigateToRoom)
@@ -57,13 +58,13 @@ class MainActivity : AppCompatActivity() {
                 viewModel.action.collect(::handleAction)
             }
         }
-
+        
         binding.apply {
             listButton.setOnClickListener { viewModel.navigateToRoomsList() }
             profileButton.setOnClickListener { viewModel.navigateToProfile() }
             createRoomFab.setOnClickListener { viewModel.navigateToCreateRoom() }
         }
-
+        
         onBackPressedDispatcher.addCallback(this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
     }
-
+    
     private fun handleAction(action: MainActivityViewModel.Action) {
         when (action) {
             MainActivityViewModel.Action.NavigateToCreateRoom -> {
@@ -95,37 +96,30 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
+    
     private fun navigateToRoom(room: MainActivityViewModel.Room) {
         binding.apply {
-            listButton.setColorFilter(
-                getColor(
-                    if (room is MainActivityViewModel.Room.RoomsList) R.color.colorAccent
-                    else R.color.colorPrimary
-                )
-            )
-            profileButton.setColorFilter(
-                getColor(
-                    if (room is MainActivityViewModel.Room.Profile) R.color.colorAccent
-                    else R.color.colorPrimary
-                )
-            )
+            listButton.setColorFilter(ContextCompat.getColor(this@MainActivity,
+                if (room is MainActivityViewModel.Room.RoomsList) R.color.colorAccent
+                else R.color.colorPrimary))
+            profileButton.setColorFilter(ContextCompat.getColor(this@MainActivity,
+                if (room is MainActivityViewModel.Room.Profile) R.color.colorAccent
+                else R.color.colorPrimary))
         }
     }
-
+    
     override fun onResume() {
         super.onResume()
         if (firebaseAuth.currentUser == null || !keyValueStorage.isAuthorized) navigateToLoginScreen(
-            this
-        ) //navigate to login screen if user not logged in
+            this) //navigate to login screen if user not logged in
     }
-
+    
     private fun handleIntent(intent: Intent?) {
         val appLinkAction: String? = intent?.action
         val appLinkData: Uri? = intent?.data
         handleRoomJoin(appLinkAction, appLinkData)
     }
-
+    
     private fun handleRoomJoin(appLinkAction: String?, appLinkData: Uri?) {
         if (appLinkAction == Intent.ACTION_VIEW && appLinkData != null) {
             val roomId = appLinkData.getQueryParameter("roomId")
@@ -138,11 +132,10 @@ class MainActivity : AppCompatActivity() {
                     putString("pass", roomPassword)
                 }
                 fragment.arguments = args
-                lifecycleScope.launch{
+                lifecycleScope.launch {
                     delay(10) //delay to wait main screen to initialize
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .commit()
+                        .replace(R.id.fragment_container, fragment).commit()
                 }
             }
         }

@@ -1,11 +1,7 @@
 package ru.kheynov.secretsanta.presentation.screens.profile
 
 import android.app.AlertDialog
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,11 +54,11 @@ class ProfileFragment : Fragment() {
             logoutButton.setOnClickListener { showLogoutAlertDialog(view) }
             nicknameText.setOnClickListener { viewModel.editUsername() }
             deleteProfileButton.setOnClickListener { showDeleteAccountDialog(view) }
-            getTokenButton.setOnClickListener { getToken() }
+//            getTokenButton.setOnClickListener { getToken() }
         }
     }
     
-    private fun getToken() {
+    /*private fun getToken() {
         firebaseAuth.currentUser?.getIdToken(false)?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val token = task.result.token.toString()
@@ -75,7 +71,7 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(activity, "Token copied to clipboard!", Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    }*/
     
     override fun onResume() {
         super.onResume()
@@ -94,7 +90,7 @@ class ProfileFragment : Fragment() {
             
             avatarImage.visibility = deleteProfileLayout.visibility
             logoutButton.visibility = deleteProfileLayout.visibility
-            getTokenButton.visibility = deleteProfileLayout.visibility
+//            getTokenButton.visibility = deleteProfileLayout.visibility
             
             nicknameText.apply {
                 if (state is State.Loaded) {
