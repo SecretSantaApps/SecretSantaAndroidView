@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
         binding.apply {
             logoutButton.setOnClickListener { showLogoutAlertDialog(view) }
             nicknameText.setOnClickListener { viewModel.editUsername() }
-            deleteProfileButton.setOnClickListener { showDeleteAccountDialog(view) }
+//            deleteProfileButton.setOnClickListener { showDeleteAccountDialog(view) }
 //            getTokenButton.setOnClickListener { getToken() }
         }
     }
@@ -85,11 +85,12 @@ class ProfileFragment : Fragment() {
         binding.apply {
             profileProgressBar.visibility = if (state is State.Loading) View.VISIBLE
             else View.GONE
-            deleteProfileLayout.visibility = if (state is State.Loaded) View.VISIBLE
-            else View.GONE
+//            deleteProfileLayout.visibility = if (state is State.Loaded) View.VISIBLE
+//            else View.GONE
             
-            avatarImage.visibility = deleteProfileLayout.visibility
-            logoutButton.visibility = deleteProfileLayout.visibility
+            avatarImage.visibility = if (state is State.Loaded) View.VISIBLE
+            else View.GONE
+            logoutButton.visibility = avatarImage.visibility
 //            getTokenButton.visibility = deleteProfileLayout.visibility
             
             nicknameText.apply {
@@ -189,8 +190,8 @@ class ProfileFragment : Fragment() {
             show()
         }
     }
-    
-    private fun showDeleteAccountDialog(view: View) {
+
+/*    private fun showDeleteAccountDialog(view: View) {
         val builder = AlertDialog.Builder(view.context)
         builder.apply {
             setTitle(getString(R.string.delete_profile_dialog_title))
@@ -205,6 +206,6 @@ class ProfileFragment : Fragment() {
             }
             show()
         }
-    }
+    }*/
 }
 

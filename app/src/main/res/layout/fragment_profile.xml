@@ -94,7 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent" />-->
 
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/delete_profile_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
     </LinearLayout>
-
+-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/error_layout"
         android:layout_width="match_parent"
