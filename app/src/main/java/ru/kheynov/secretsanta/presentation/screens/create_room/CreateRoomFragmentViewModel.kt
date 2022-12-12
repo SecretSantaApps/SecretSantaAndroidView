@@ -66,7 +66,11 @@ class CreateRoomFragmentViewModel @Inject constructor(
             
             val price: Int? = maxPrice.let {
                 if (it.isNullOrBlank() || it == "0") null
-                else try {
+                else if (it.length > 7) {
+                    _actions.send(Action.ShowError(UiText.StringResource(R.string.wrong_max_price)))
+                    _state.value = State.Idle
+                    return@launch
+                } else try {
                     it.toInt()
                 } catch (e: Exception) {
                     _actions.send(Action.ShowError(UiText.StringResource(R.string.wrong_max_price)))

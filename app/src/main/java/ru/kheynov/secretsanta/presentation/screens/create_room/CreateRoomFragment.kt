@@ -78,7 +78,7 @@ class CreateRoomFragment : Fragment() {
         val datePicker =
             DatePickerDialog(requireContext(), { _, year_picker, month_picker, day_picker ->
                 Log.i(tag, "$day_picker $month_picker $year_picker")
-                if (year_picker == year && month_picker == month && day_picker < day) {
+                if (year_picker == year && month_picker == month && day_picker == day) {
                     viewModel.setDate(null)
                 } else {
                     viewModel.setDate(LocalDate.of(year_picker, month_picker + 1, day_picker))
