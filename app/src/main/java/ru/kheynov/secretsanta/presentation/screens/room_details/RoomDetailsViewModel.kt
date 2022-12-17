@@ -60,7 +60,6 @@ class RoomDetailsViewModel @Inject constructor(
     fun loadInfo() {
         viewModelScope.launch {
             _state.value = Loading
-            
             if (roomId.isNullOrBlank()) {
                 _actions.send(ShowError(StringResource(R.string.error)))
                 return@launch

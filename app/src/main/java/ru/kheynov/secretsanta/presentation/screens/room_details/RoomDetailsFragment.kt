@@ -149,7 +149,7 @@ class RoomDetailsFragment : Fragment() {
                     password.also {
                         if (it == null) {
                             roomPassword.visibility = View.GONE
-                            startStopGameButton.visibility = View.INVISIBLE
+                            startStopGameButton.visibility = View.GONE
                             startStopGameButton.isEnabled = false
                             roomDetailsCopyLinkButton.visibility = View.INVISIBLE
                         } else {
@@ -220,7 +220,10 @@ class RoomDetailsFragment : Fragment() {
                             "Error: ${getString(R.string.not_enough_players)}",
                             Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(activity, "Error: ${action.error}", Toast.LENGTH_SHORT)
+                        Toast.makeText(activity,
+                            "Error: ${action.error.getText(requireContext())}",
+                            Toast
+                                .LENGTH_SHORT)
                             .show()
                     }
                 }
