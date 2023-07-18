@@ -14,17 +14,17 @@ enum class KEYS {
 
 @Singleton
 class KeyValueStorage @Inject constructor(@ApplicationContext context: Context) {
-
+    
     private val prefs: SharedPreferences =
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-
+    
     var isAuthorized: Boolean = false
         set(value) {
             field = value
             saveToPreferences(value, KEYS.IS_AUTHORIZED)
         }
         get() = prefs.getBoolean(KEYS.IS_AUTHORIZED.name, false)
-
+    
     private fun <T> saveToPreferences(value: T?, key: KEYS) {
         val editor: SharedPreferences.Editor = prefs.edit()
         when (value) {

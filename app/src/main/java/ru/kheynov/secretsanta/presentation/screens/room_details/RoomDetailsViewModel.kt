@@ -82,7 +82,6 @@ class RoomDetailsViewModel @Inject constructor(
                 is Resource.Failure -> {
                     if (res.exception is SantaException || res.exception is HttpException) {
                         _state.value = Error(res.exception)
-                        
                     } else {
                         _actions.send(ShowError(PlainText(res.exception.message.toString())))
                     }

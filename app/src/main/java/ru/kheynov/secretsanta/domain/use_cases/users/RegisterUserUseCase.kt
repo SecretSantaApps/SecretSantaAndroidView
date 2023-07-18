@@ -8,13 +8,11 @@ import javax.inject.Inject
 
 
 class RegisterUserUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val usersRepository: UsersRepository,
 ) {
     suspend operator fun invoke(
         user: RegisterUser,
     ): Resource<Unit> {
-        tokenRepository.fetchToken()
         return usersRepository.registerUser(user)
     }
 }

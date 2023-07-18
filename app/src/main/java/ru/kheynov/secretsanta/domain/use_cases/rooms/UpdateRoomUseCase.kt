@@ -7,14 +7,12 @@ import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Inject
 
 class UpdateRoomUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val roomsRepository: RoomsRepository,
 ) {
     suspend operator fun invoke(
         roomId: String,
         room: RoomDTO.Update,
     ): Resource<Unit> {
-        tokenRepository.fetchToken()
         return roomsRepository.updateRoom(roomId, room)
     }
 }

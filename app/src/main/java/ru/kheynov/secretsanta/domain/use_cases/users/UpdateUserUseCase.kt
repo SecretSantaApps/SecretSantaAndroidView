@@ -8,11 +8,9 @@ import ru.kheynov.secretsanta.utils.UserNotExistsException
 import javax.inject.Inject
 
 class UpdateUserUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val usersRepository: UsersRepository,
 ) {
     suspend operator fun invoke(updateUser: UpdateUser): Resource<Unit> {
-        tokenRepository.fetchToken()
         val userCheck = usersRepository.checkUserRegistered()
         if (userCheck is Resource.Success && !userCheck.result)
             return Resource.Failure(UserNotExistsException())

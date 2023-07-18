@@ -7,13 +7,11 @@ import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Inject
 
 class GetGameInfoUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val gameRepository: GameRepository,
 ) {
     suspend operator fun invoke(
         roomId: String,
     ): Resource<GameDTO.RoomInfo> {
-        tokenRepository.fetchToken()
         return gameRepository.getGameInfo(roomId)
     }
 }

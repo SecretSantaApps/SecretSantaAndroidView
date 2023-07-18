@@ -6,13 +6,11 @@ import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Inject
 
 class DeleteRoomUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val roomsRepository: RoomsRepository,
 ) {
     suspend operator fun invoke(
         roomId: String,
     ): Resource<Unit> {
-        tokenRepository.fetchToken()
         return roomsRepository.deleteRoom(roomId)
     }
 }

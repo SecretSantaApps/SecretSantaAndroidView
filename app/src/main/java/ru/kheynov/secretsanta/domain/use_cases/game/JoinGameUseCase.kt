@@ -6,14 +6,12 @@ import ru.kheynov.secretsanta.utils.TokenRepository
 import javax.inject.Inject
 
 class JoinGameUseCase @Inject constructor(
-    private val tokenRepository: TokenRepository,
     private val gameRepository: GameRepository,
 ) {
     suspend operator fun invoke(
         roomId: String,
         password: String
     ): Resource<Unit> {
-        tokenRepository.fetchToken()
         return gameRepository.joinRoom(roomId, password)
     }
 }
